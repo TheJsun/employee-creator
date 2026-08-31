@@ -1,0 +1,176 @@
+package com.jason.employee_creator.employee.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "employees")
+public class Employee {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @NotBlank
+  @Column(nullable = false, length = 50)
+  @Size(max = 50)
+  private String firstName;
+
+  @NotBlank
+  @Column(nullable = false, length = 50)
+  @Size(max = 50)
+  private String lastName;
+
+  @Column(length = 50)
+  @Size(max = 50)
+  private String middleName;
+
+  @NotBlank
+  @Email
+  @Column(unique = true, nullable = false)
+  private String email;
+
+  @NotBlank
+  private String phoneNumber;
+
+  @NotBlank
+  private String address;
+
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private ContractType contractType;
+
+  @NotNull
+  private LocalDate startDate;
+
+  private LocalDate finishDate;
+
+  @NotNull
+  private Boolean isOnGoing;
+
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private FullTimeOrPartTime fullTimeOrPartTime;
+
+  @NotNull
+  @Min(1)
+  @Max(168)
+  private Integer hoursPerWeek;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getMiddleName() {
+    return middleName;
+  }
+
+  public void setMiddleName(String middleName) {
+    this.middleName = middleName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public ContractType getContractType() {
+    return contractType;
+  }
+
+  public void setContractType(ContractType contractType) {
+    this.contractType = contractType;
+  }
+
+  public LocalDate getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
+
+  public LocalDate getFinishDate() {
+    return finishDate;
+  }
+
+  public void setFinishDate(LocalDate finishDate) {
+    this.finishDate = finishDate;
+  }
+
+  public Boolean getIsOnGoing() {
+    return isOnGoing;
+  }
+
+  public void setIsOnGoing(Boolean isOnGoing) {
+    this.isOnGoing = isOnGoing;
+  }
+
+  public FullTimeOrPartTime getFullTimeOrPartTime() {
+    return fullTimeOrPartTime;
+  }
+
+  public void setFullTimeOrPartTime(FullTimeOrPartTime fullTimeOrPartTime) {
+    this.fullTimeOrPartTime = fullTimeOrPartTime;
+  }
+
+  public Integer getHoursPerWeek() {
+    return hoursPerWeek;
+  }
+
+  public void setHoursPerWeek(Integer hoursPerWeek) {
+    this.hoursPerWeek = hoursPerWeek;
+  }
+}
