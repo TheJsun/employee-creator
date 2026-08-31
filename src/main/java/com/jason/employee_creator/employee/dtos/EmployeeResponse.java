@@ -4,6 +4,7 @@ import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
 import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
 import java.time.LocalDate;
+import java.util.List;
 
 public record EmployeeResponse(
   Long id,
@@ -14,7 +15,7 @@ public record EmployeeResponse(
   String phoneNumber,
   String address,
   ContractType contractType,
-  LocalDate starDate,
+  LocalDate startDate,
   LocalDate finishDate,
   Boolean isOnGoing,
   FullTimeOrPartTime fullTimeOrPartTime,
@@ -36,5 +37,12 @@ public record EmployeeResponse(
       employee.getFullTimeOrPartTime(),
       employee.getHoursPerWeek()
     );
+  }
+
+  public static List<EmployeeResponse> of(List<Employee> employees) {
+    return employees
+      .stream()
+      .map(e -> EmployeeResponse.of(e))
+      .toList();
   }
 }

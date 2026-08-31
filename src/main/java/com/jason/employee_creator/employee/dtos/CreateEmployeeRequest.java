@@ -2,9 +2,6 @@ package com.jason.employee_creator.employee.dtos;
 
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
