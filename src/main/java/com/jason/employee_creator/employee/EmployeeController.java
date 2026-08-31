@@ -45,10 +45,7 @@ public class EmployeeController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteBookById(@PathVariable Long id) {
-    boolean isDeleted = this.employeeService.deleteById(id);
-    if (isDeleted) {
-      return ResponseEntity.noContent().build();
-    }
-    throw new NotFoundException("Could not find employee with id " + id);
+    this.employeeService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }

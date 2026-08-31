@@ -1,9 +1,10 @@
 package com.jason.employee_creator.employee;
 
+import com.jason.employee_creator.common.exceptions.DuplicateEmailException;
+import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import java.util.List;
-import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,22 +23,27 @@ public class EmployeeService {
     return this.repo.findAll();
   }
 
-  public Optional<Employee> findById(Long id) {
-    return this.repo.findById(id);
+  public Employee findById(Long id) {
+    return this.repo
+      .findById(id)
+      .orElseThrow(() ->
+        new NotFoundException("Could not find Employee with id = " + id)
+      );
   }
 
   public Employee create(CreateEmployeeRequest data) {
+    if (this.repo.existsByEmail(data.getEmail())) {
+      throw new DuplicateEmailException(data.getEmail());
+    }
+
     Employee createdEmployee = this.mapper.map(data, Employee.class);
     this.repo.saveAndFlush(createdEmployee);
     return createdEmployee;
   }
 
-  public boolean deleteById(Long id) {
-    Optional<Employee> result = this.repo.findById(id);
-    if (result.isEmpty()) {
-      return false;
-    }
-    this.repo.delete(result.get());
-    return true;
+  public void deleteById(Long id) {
+    Employee target = this.findById(id);
+
+    this.repo.delete(target);
   }
 }
