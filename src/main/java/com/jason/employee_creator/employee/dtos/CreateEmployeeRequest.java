@@ -42,7 +42,7 @@ public class CreateEmployeeRequest {
   private LocalDate finishDate;
 
   @NotNull
-  private Boolean isOnGoing;
+  private Boolean onGoing;
 
   @NotNull
   private FullTimeOrPartTime fullTimeOrPartTime;
@@ -126,12 +126,12 @@ public class CreateEmployeeRequest {
     this.finishDate = finishDate;
   }
 
-  public Boolean getIsOnGoing() {
-    return isOnGoing;
+  public Boolean getOnGoing() {
+    return onGoing;
   }
 
-  public void setIsOnGoing(Boolean isOnGoing) {
-    this.isOnGoing = isOnGoing;
+  public void setOnGoing(Boolean onGoing) {
+    this.onGoing = onGoing;
   }
 
   public FullTimeOrPartTime getFullTimeOrPartTime() {

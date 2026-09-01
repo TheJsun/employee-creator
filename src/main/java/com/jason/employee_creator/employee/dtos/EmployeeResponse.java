@@ -17,7 +17,7 @@ public record EmployeeResponse(
   ContractType contractType,
   LocalDate startDate,
   LocalDate finishDate,
-  Boolean isOnGoing,
+  Boolean onGoing,
   FullTimeOrPartTime fullTimeOrPartTime,
   Integer hoursPerWeek
 ) {
@@ -33,7 +33,7 @@ public record EmployeeResponse(
       employee.getContractType(),
       employee.getStartDate(),
       employee.getFinishDate(),
-      employee.getIsOnGoing(),
+      employee.getOnGoing(),
       employee.getFullTimeOrPartTime(),
       employee.getHoursPerWeek()
     );

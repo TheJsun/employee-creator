@@ -1,6 +1,5 @@
 package com.jason.employee_creator.employee;
 
-import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.dtos.EmployeeResponse;
 import com.jason.employee_creator.employee.entities.Employee;
@@ -44,7 +43,7 @@ public class EmployeeController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteBookById(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id) {
     this.employeeService.deleteById(id);
     return ResponseEntity.noContent().build();
   }

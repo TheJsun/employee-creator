@@ -59,7 +59,7 @@ public class Employee {
   private LocalDate finishDate;
 
   @NotNull
-  private Boolean isOnGoing;
+  private Boolean onGoing;
 
   @NotNull
   @Enumerated(EnumType.STRING)
@@ -150,12 +150,12 @@ public class Employee {
     this.finishDate = finishDate;
   }
 
-  public Boolean getIsOnGoing() {
-    return isOnGoing;
+  public Boolean getOnGoing() {
+    return onGoing;
   }
 
-  public void setIsOnGoing(Boolean isOnGoing) {
-    this.isOnGoing = isOnGoing;
+  public void setOnGoing(Boolean onGoing) {
+    this.onGoing = onGoing;
   }
 
   public FullTimeOrPartTime getFullTimeOrPartTime() {

@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "middleName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "contractType": {
+      "type": "string"
+    },
+    "startDate": {
+      "type": "string"
+    },
+    "finishDate": {},
+    "onGoing": {
+      "type": "boolean"
+    },
+    "fullTimeOrPartTime": {
+      "type": "string"
+    },
+    "hoursPerWeek": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "firstName",
+    "lastName",
+    "middleName",
+    "email",
+    "phoneNumber",
+    "address",
+    "contractType",
+    "startDate",
+    "finishDate",
+    "onGoing",
+    "fullTimeOrPartTime",
+    "hoursPerWeek"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmployeeListResponse",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "firstName": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "lastName": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "middleName": {
+        "type": ["string", "null"],
+        "maxLength": 50
+      },
+      "email": {
+        "type": "string",
+        "format": "email"
+      },
+      "phoneNumber": {
+        "type": ["string", "null"]
+      },
+      "address": {
+        "type": ["string", "null"]
+      },
+      "contractType": {
+        "type": "string",
+        "enum": ["PERMANENT", "CONTRACT"]
+      },
+      "startDate": {
+        "type": "string",
+        "format": "date"
+      },
+      "finishDate": {
+        "type": ["string", "null"],
+        "format": "date"
+      },
+      "onGoing": {
+        "type": "boolean"
+      },
+      "fullTimeOrPartTime": {
+        "type": "string",
+        "enum": ["FULL_TIME", "PART_TIME"]
+      },
+      "hoursPerWeek": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 80
+      }
+    },
+    "required": [
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "contractType",
+      "startDate",
+      "onGoing",
+      "fullTimeOrPartTime",
+      "hoursPerWeek"
+    ],
+    "additionalProperties": false
+  }
+}
