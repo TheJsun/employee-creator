@@ -5,10 +5,12 @@ import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class EmployeeService {
 
   private final EmployeeRepository repo;
@@ -32,18 +34,31 @@ public class EmployeeService {
   }
 
   public Employee create(CreateEmployeeRequest data) {
+    log.info("Attempting to create employee with email={}", data.getEmail());
+
     if (this.repo.existsByEmail(data.getEmail())) {
+      log.warn("Create employee failed - duplicate email={}", data.getEmail());
+
       throw new DuplicateEmailException(data.getEmail());
     }
 
     Employee createdEmployee = this.mapper.map(data, Employee.class);
     this.repo.saveAndFlush(createdEmployee);
+    log.info(
+      "Created employee id={} email={}",
+      createdEmployee.getId(),
+      createdEmployee.getEmail()
+    );
+
     return createdEmployee;
   }
 
   public void deleteById(Long id) {
+    log.info("Attempting to delete employee id={}", id);
+
     Employee target = this.findById(id);
 
     this.repo.delete(target);
+    log.info("Deleted employee id={}", id);
   }
 }

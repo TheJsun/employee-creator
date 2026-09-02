@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NotFoundException.class)
@@ -22,6 +24,7 @@ public class GlobalExceptionHandler {
     NotFoundException ex,
     HttpServletRequest req
   ) {
+    log.warn("Not found exception", ex.getMessage());
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.NOT_FOUND,
       ex.getMessage(),
@@ -35,6 +38,7 @@ public class GlobalExceptionHandler {
     DuplicateEmailException ex,
     HttpServletRequest req
   ) {
+    log.warn("Duplicate email conflict: {}", ex.getMessage());
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.CONFLICT,
       ex.getMessage(),
@@ -48,6 +52,7 @@ public class GlobalExceptionHandler {
     MethodArgumentNotValidException ex,
     HttpServletRequest req
   ) {
+    log.warn("Invalid method argument", ex.getMessage());
     Map<String, ArrayList<String>> errors = new HashMap<>();
 
     for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
@@ -56,7 +61,6 @@ public class GlobalExceptionHandler {
 
       errors.computeIfAbsent(field, k -> new ArrayList<>()).add(message);
     }
-    System.out.println("Caught: " + ex.getClass().getName());
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.BAD_REQUEST,
       ex.getMessage(),
@@ -71,7 +75,7 @@ public class GlobalExceptionHandler {
     Exception ex,
     HttpServletRequest req
   ) {
-    System.out.println("Unhandled exception: " + ex.getClass().getName());
+    log.warn("Unhandled exception", ex.getMessage());
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.UNPROCESSABLE_CONTENT,
       ex.getMessage(),
