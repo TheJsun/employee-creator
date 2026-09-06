@@ -24,3 +24,10 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
   }
   return (await response.json()) as EmployeeResponse;
 };
+
+export const deleteEmployee = async (id: number) => {
+  const response = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+  if (!response.ok) {
+    throw new Error("Failed to delete employee");
+  }
+};
