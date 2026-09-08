@@ -1,5 +1,6 @@
 import type { EmployeeResponse } from "../../schemas/employee-schema";
 import EmployeeCard from "../EmployeeCard/EmployeeCard";
+import classes from "./EmployeeList.module.scss";
 
 interface EmployeeListProps {
   employees: EmployeeResponse[];
@@ -13,7 +14,7 @@ export default function EmployeeList({
   const handleEdit = () => {};
 
   return (
-    <section>
+    <section className={classes.employeeList}>
       <ul>
         {employees.length === 0 && (
           <h4>No employees registered, add one above.</h4>

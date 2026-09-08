@@ -1,0 +1,32 @@
+.employeeDetails {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  gap: 0.2em;
+}
+
+.field {
+  height: 2em;
+  width: 20%;
+  margin-top: 0.4em;
+  &--date {
+    width: 30%;
+    height: 2.5em;
+  }
+}
+
+.label {
+  font-weight: 500;
+}
+
+.error {
+  color: red;
+  margin-top: 0.3em;
+  margin-bottom: 0;
+}
+
+.optionInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}

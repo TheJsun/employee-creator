@@ -7,6 +7,8 @@ import PersonalInfoStep from "../PersonalInfoStep/PersonalInfoStep";
 import EmploymentDetailsStep from "../EmploymentDetailsStep/EmploymentDetailsStep";
 import StepNavigation from "../StepNavigation/StepNavigation";
 import { useNavigate } from "react-router-dom";
+import classes from "./CreateEmployeeForm.module.scss";
+import Button from "../../Button/Button";
 
 export default function CreateEmployeeForm() {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
@@ -30,6 +32,10 @@ export default function CreateEmployeeForm() {
 
   const handleBack = () => setCurrentStep(1);
 
+  const handleCancel = () => {
+    navigate("/");
+  };
+
   const onSubmit = (data: CreateEmployeeRequest) => {
     createEmployeeMutation.mutate(data);
     navigate("/");
@@ -37,14 +43,32 @@ export default function CreateEmployeeForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        className={classes.employeeForm}
+        onSubmit={methods.handleSubmit(onSubmit)}
+      >
         {currentStep === 1 && <PersonalInfoStep />}
         {currentStep === 2 && <EmploymentDetailsStep />}
+        <div className={classes.formButtons}>
+          {currentStep === 2 && (
+            <div>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={createEmployeeMutation.isPending}
+              >
+                {createEmployeeMutation.isPending ? "Creating..." : "Save"}
+              </Button>
+              <Button type="button" variant="secondary" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </div>
+          )}
+        </div>
         <StepNavigation
           currentStep={currentStep}
           onNext={handleNext}
           onBack={handleBack}
-          isSubmitting={createEmployeeMutation.isPending}
         />
       </form>
     </FormProvider>

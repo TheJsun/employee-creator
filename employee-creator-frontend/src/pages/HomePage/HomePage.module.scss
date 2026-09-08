@@ -1,0 +1,19 @@
+.homepage {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  min-height: 100vh;
+}
+
+.content {
+  padding: 1em;
+}
+
+.addEmployeeCard {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  padding-bottom: 1em;
+  border-bottom: 0.1px solid grey;
+  justify-content: space-between;
+}

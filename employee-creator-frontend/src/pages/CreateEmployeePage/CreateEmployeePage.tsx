@@ -1,15 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import Button from "../../components/Button/Button";
 import CreateEmployeeForm from "../../components/CreateEmployeeComponents/CreateEmployeeForm/CreateEmployeeForm";
+import Header from "../../components/Header/Header";
 
 const CreateEmployeePage = () => {
-  const navigate = useNavigate();
-
   return (
-    <>
-      <Button onClick={() => navigate("/")}>Back</Button>
+    <main>
+      <Header title="Employee details" button="Back" />
+
       <CreateEmployeeForm />
-    </>
+    </main>
   );
 };
 

@@ -1,0 +1,33 @@
+.employeeDetails {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+
+  &__personalInfo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__contactInfo {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.field {
+  height: 2em;
+  width: 60%;
+  margin-top: 0.4em;
+  &--long {
+    width: 75%;
+  }
+}
+
+.label {
+  font-weight: 500;
+}
+
+.error {
+  color: red;
+  margin-top: 0.3em;
+}

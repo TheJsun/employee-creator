@@ -1,0 +1,26 @@
+.employeeCard {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1em;
+  border-bottom: 0.2px solid grey;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 0.5em;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.employee {
+  &__name {
+    font-weight: 600;
+  }
+}

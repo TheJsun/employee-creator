@@ -1,6 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import type { CreateEmployeeRequest } from "../../../schemas/employee-schema";
 import { useEffect } from "react";
+import classes from "./EmploymentDetailsStep.module.scss";
 
 export default function EmploymentDetailsStep() {
   const {
@@ -19,67 +20,95 @@ export default function EmploymentDetailsStep() {
   }, [isOnGoing, setValue]);
 
   return (
-    <section>
+    <section className={classes.employeeDetails}>
       <h3>Employee Status</h3>
+      <div className={classes.optionInput}>
+        <div className={classes.label}>What is contract type?</div>
+        <label>
+          <input type="radio" value="PERMANENT" {...register("contractType")} />
+          Permanent
+        </label>
 
-      <label>What is contract type?</label>
-      <label>
-        <input type="radio" value="PERMANENT" {...register("contractType")} />
-        Permanent
+        <label>
+          <input type="radio" value="CONTRACT" {...register("contractType")} />
+          Contract
+        </label>
+        {errors.contractType && (
+          <p className={classes.error}>{errors.contractType.message}</p>
+        )}
+      </div>
+
+      <label className={classes.label} htmlFor="startDate">
+        Start date
       </label>
-
-      <label>
-        <input type="radio" value="CONTRACT" {...register("contractType")} />
-        Contract
-      </label>
-      {errors.contractType && <p>{errors.contractType.message}</p>}
-
-      <label htmlFor="startDate">Start date</label>
-      <input id="startDate" type="date" {...register("startDate")} />
-      {errors.startDate && <p>{errors.startDate.message}</p>}
-
-      <label htmlFor="finishDate">Finish date</label>
       <input
+        className={classes["field--date"]}
+        id="startDate"
+        type="date"
+        {...register("startDate")}
+      />
+      {errors.startDate && (
+        <p className={classes.error}>{errors.startDate.message}</p>
+      )}
+
+      <label className={classes.label} htmlFor="finishDate">
+        Finish date
+      </label>
+      <input
+        className={classes["field--date"]}
         id="finishDate"
         type="date"
         disabled={isOnGoing}
         {...register("finishDate")}
       />
-      {errors.finishDate && <p>{errors.finishDate.message}</p>}
+      {errors.finishDate && (
+        <p className={classes.error}>{errors.finishDate.message}</p>
+      )}
 
       <label>
         <input type="checkbox" {...register("onGoing")} />
         Ongoing
       </label>
 
-      <label>Is this on a full-time or part-time basis?</label>
-      <label>
-        <input
-          type="radio"
-          value="FULL_TIME"
-          {...register("fullTimeOrPartTime")}
-        />
-        Full-time
-      </label>
+      <div className={classes.optionInput}>
+        <div className={classes.label}>
+          Is this on a full-time or part-time basis?
+        </div>
+        <label>
+          <input
+            type="radio"
+            value="FULL_TIME"
+            {...register("fullTimeOrPartTime")}
+          />
+          Full-time
+        </label>
 
-      <label>
-        <input
-          type="radio"
-          value="PART_TIME"
-          {...register("fullTimeOrPartTime")}
-        />
-        Part-time
-      </label>
-      {errors.fullTimeOrPartTime && <p>{errors.fullTimeOrPartTime.message}</p>}
+        <label>
+          <input
+            type="radio"
+            value="PART_TIME"
+            {...register("fullTimeOrPartTime")}
+          />
+          Part-time
+        </label>
+        {errors.fullTimeOrPartTime && (
+          <p className={classes.error}>{errors.fullTimeOrPartTime.message}</p>
+        )}
+      </div>
 
-      <label htmlFor="hoursPerWeek">
-        <input
-          id="hoursPerWeek"
-          type="number"
-          {...register("hoursPerWeek", { valueAsNumber: true })}
-        />
+      <label className={classes.label} htmlFor="hoursPerWeek">
+        Hours per week{" "}
       </label>
-      {errors.hoursPerWeek && <p>{errors.hoursPerWeek.message}</p>}
+      <input
+        className={classes.field}
+        id="hoursPerWeek"
+        type="number"
+        {...register("hoursPerWeek", { valueAsNumber: true })}
+      />
+
+      {errors.hoursPerWeek && (
+        <p className={classes.error}>{errors.hoursPerWeek.message}</p>
+      )}
     </section>
   );
 }
