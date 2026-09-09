@@ -3,12 +3,20 @@ import {
   createEmployee,
   deleteEmployee,
   getAllEmployees,
+  getEmployeeById,
 } from "../api/employeeApi";
 
 export function useEmployees() {
   return useQuery({
     queryKey: ["employees"],
     queryFn: getAllEmployees,
+  });
+}
+
+export function useEmployee(id: number) {
+  return useQuery({
+    queryKey: ["employees", id],
+    queryFn: () => getEmployeeById(id),
   });
 }
 

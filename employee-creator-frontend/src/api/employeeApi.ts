@@ -13,6 +13,14 @@ export const getAllEmployees = async () => {
   return (await response.json()) as EmployeeResponse[];
 };
 
+export const getEmployeeById = async (id: number) => {
+  const response = await fetch(`${BASE_URL}/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch employee with id = ${id}`);
+  }
+  return (await response.json()) as EmployeeResponse;
+};
+
 export const createEmployee = async (data: CreateEmployeeRequest) => {
   const response = await fetch(BASE_URL, {
     method: "POST",

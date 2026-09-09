@@ -32,6 +32,12 @@ public class EmployeeController {
     return ResponseEntity.ok(EmployeeResponse.of(allEmployees));
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<EmployeeResponse> findEmployeeById(Long id) {
+    Employee foundEmployee = this.employeeService.findById(id);
+    return ResponseEntity.ok(EmployeeResponse.of(foundEmployee));
+  }
+
   @PostMapping()
   public ResponseEntity<EmployeeResponse> createEmployee(
     @RequestBody @Valid CreateEmployeeRequest data

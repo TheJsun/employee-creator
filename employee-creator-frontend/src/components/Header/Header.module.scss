@@ -1,9 +1,12 @@
+@use "../../scss/variables/variables";
+
 .header {
   display: grid;
   grid-template-rows: 1fr auto 1fr;
   width: 100%;
   height: 18vh;
-  background-color: rgb(230, 229, 229);
+  background-color: var(--bg-primary);
+  color: var(--text-white);
   padding: 1em 2em;
 
   &__btn {
