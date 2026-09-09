@@ -14,11 +14,11 @@ export default function EmployeeList({
   onDelete,
 }: EmployeeListProps) {
   return (
-    <section className={classes.employeeList}>
-      <ul>
-        {employees.length === 0 && (
-          <h4>No employees registered, add one above.</h4>
-        )}
+    <section className={classes.employeeListContainer}>
+      {employees.length === 0 && (
+        <h4>No employees registered, add one above.</h4>
+      )}
+      <div className={classes.employeeList}>
         {employees.map((emp) => (
           <EmployeeCard
             key={emp.id}
@@ -27,7 +27,7 @@ export default function EmployeeList({
             onEdit={onEdit}
           />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

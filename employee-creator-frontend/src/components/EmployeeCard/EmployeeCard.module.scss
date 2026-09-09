@@ -1,26 +1,71 @@
-.employeeCard {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 1em;
-  border-bottom: 0.2px solid grey;
+@use "../../scss/mixins/media" as q;
 
-  &__info {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    gap: 0.5em;
-
-    p {
-      margin: 0;
-    }
-  }
+p {
+  margin: 0;
 }
+.employeeCard {
+  width: 50%;
+  min-width: 285px;
+  max-width: 300px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+  border-radius: 5%;
+  background-color: #ffffff;
+  gap: 1em;
+  font-size: 13px;
+}
+.employeeIdentity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.employee {
+  &__avatar {
+    display: flex;
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__initials {
+    color: var(--text-white);
+    font-weight: 600;
+  }
+
   &__name {
     font-weight: 600;
   }
+}
+
+.employmentDetails {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+
+  &__row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.employeeContacts {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+
+  &__row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@include q.md {
 }

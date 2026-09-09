@@ -1,4 +1,5 @@
 @use "../../scss/variables/variables";
+@use "../../scss/mixins/media" as q;
 
 .header {
   display: grid;
@@ -16,5 +17,25 @@
   &__title {
     grid-row: 2;
     align-self: center;
+  }
+}
+
+.headerContent {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+
+  display: flex;
+}
+
+@include q.lg {
+  .headerContent {
+    max-width: 900px;
+  }
+}
+
+@include q.xl {
+  .headerContent {
+    max-width: 1200px;
   }
 }

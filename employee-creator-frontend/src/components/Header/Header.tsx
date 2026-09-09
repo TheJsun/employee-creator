@@ -12,12 +12,14 @@ export default function Header({ title, button }: HeaderProps) {
 
   return (
     <header className={classes.header}>
-      <div className={classes.header__btn}>
-        {button && <Button onClick={() => navigate("/")}>{button} </Button>}
-      </div>
+      <div className={classes.headerContent}>
+        <div className={classes.header__btn}>
+          {button && <Button onClick={() => navigate("/")}>{button} </Button>}
+        </div>
 
-      <h1 className={classes.header__title}>{title}</h1>
-      <div />
+        <h1 className={classes.header__title}>{title}</h1>
+        <div />
+      </div>
     </header>
   );
 }

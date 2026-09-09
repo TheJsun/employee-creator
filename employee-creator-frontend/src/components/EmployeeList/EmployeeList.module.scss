@@ -1,3 +1,36 @@
-.employeeList {
+@use "../../scss/mixins/media" as q;
+
+.employeeListContainer {
   margin-top: 1em;
+}
+
+.employeeList {
+  width: 100%;
+  display: grid;
+  max-width: 1300px;
+  // padding-left: 3em;
+  // padding-right: 3em;
+  margin: 0 auto;
+  grid-template-columns: repeat(1, 1fr);
+  justify-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+@include q.md {
+  .employeeList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include q.lg {
+  .employeeList {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@include q.xl {
+  .employeeList {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

@@ -5,13 +5,15 @@ import CreateEmployeePage from "./pages/CreateEmployeePage/CreateEmployeePage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/employees/new" element={<CreateEmployeePage />} />
-        <Route path="/employees/edit/:id" element={<CreateEmployeePage />} />
-      </Routes>
-    </BrowserRouter>
+    <main>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/employees/new" element={<CreateEmployeePage />} />
+          <Route path="/employees/edit/:id" element={<CreateEmployeePage />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
   );
 }
 

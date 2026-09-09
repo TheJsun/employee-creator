@@ -27,7 +27,7 @@ const HomePage = () => {
   }
   return (
     <main className={classes.homepage}>
-      <Header title="Employees' list" />
+      <Header title="Employees" />
       <section className={classes.content}>
         <div className={classes.addEmployeeCard}>
           <p>Please click on 'Edit' to find more details of each employee.</p>
