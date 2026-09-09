@@ -1,23 +1,44 @@
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { CreateEmployeeRequest } from "../../../schemas/employee-schema";
+import {
+  CreateEmployeeRequest,
+  type EmployeeResponse,
+} from "../../../schemas/employee-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateEmployee } from "../../../hooks/useEmployees";
+import {
+  useCreateEmployee,
+  useUpdateEmployee,
+} from "../../../hooks/useEmployees";
 import PersonalInfoStep from "../PersonalInfoStep/PersonalInfoStep";
 import EmploymentDetailsStep from "../EmploymentDetailsStep/EmploymentDetailsStep";
 import StepNavigation from "../StepNavigation/StepNavigation";
 import { useNavigate } from "react-router-dom";
 import classes from "./CreateEmployeeForm.module.scss";
 import Button from "../../Button/Button";
+import { toFormData } from "../../../services/form-services";
 
-export default function CreateEmployeeForm() {
+interface CreateEmployeeProps {
+  mode: "create" | "edit";
+  employeeId: number | undefined;
+  initialData: EmployeeResponse | undefined;
+}
+
+export default function CreateEmployeeForm({
+  mode,
+  employeeId,
+  initialData,
+}: CreateEmployeeProps) {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const methods = useForm<CreateEmployeeRequest>({
     resolver: zodResolver(CreateEmployeeRequest),
+    defaultValues: initialData ? toFormData(initialData) : undefined,
     mode: "onBlur",
   });
   const createEmployeeMutation = useCreateEmployee();
+  const updateEmployeeMutation = useUpdateEmployee();
   const navigate = useNavigate();
+  const activeMutation =
+    mode === "edit" ? updateEmployeeMutation : createEmployeeMutation;
 
   const handleNext = async () => {
     const isValid = await methods.trigger([
@@ -37,8 +58,16 @@ export default function CreateEmployeeForm() {
   };
 
   const onSubmit = (data: CreateEmployeeRequest) => {
-    createEmployeeMutation.mutate(data);
-    navigate("/");
+    if (mode === "edit" && employeeId) {
+      updateEmployeeMutation.mutate(
+        { id: employeeId, data },
+        { onSuccess: () => navigate("/") },
+      );
+    } else {
+      createEmployeeMutation.mutate(data, {
+        onSuccess: () => navigate("/"),
+      });
+    }
   };
 
   return (
@@ -55,9 +84,19 @@ export default function CreateEmployeeForm() {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={createEmployeeMutation.isPending}
+                disabled={
+                  mode === "edit"
+                    ? updateEmployeeMutation.isPending
+                    : createEmployeeMutation.isPending
+                }
               >
-                {createEmployeeMutation.isPending ? "Creating..." : "Save"}
+                {mode === "edit"
+                  ? updateEmployeeMutation.isPending
+                    ? "Saving..."
+                    : "Save Changes"
+                  : createEmployeeMutation.isPending
+                    ? "Creating..."
+                    : "Save"}
               </Button>
               <Button type="button" variant="secondary" onClick={handleCancel}>
                 Cancel
@@ -70,6 +109,9 @@ export default function CreateEmployeeForm() {
           onNext={handleNext}
           onBack={handleBack}
         />
+        {activeMutation.isError && (
+          <p className={classes.error}>{activeMutation.error.message}</p>
+        )}
       </form>
     </FormProvider>
   );

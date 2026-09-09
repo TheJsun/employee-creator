@@ -8,7 +8,10 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export const getAllEmployees = async () => {
   const response = await fetch(BASE_URL);
   if (!response.ok) {
-    throw new Error("Failed to fetch employees");
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to fetch employees: ${response.status}`,
+    );
   }
   return (await response.json()) as EmployeeResponse[];
 };
@@ -16,7 +19,10 @@ export const getAllEmployees = async () => {
 export const getEmployeeById = async (id: number) => {
   const response = await fetch(`${BASE_URL}/${id}`);
   if (!response.ok) {
-    throw new Error(`Failed to fetch employee with id = ${id}`);
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to fetch employee: ${response.status}`,
+    );
   }
   return (await response.json()) as EmployeeResponse;
 };
@@ -28,7 +34,10 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
     headers: { "Content-Type": "application/json" },
   });
   if (!response.ok) {
-    throw new Error("Failed to create employee");
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to create employee: ${response.status}`,
+    );
   }
   return (await response.json()) as EmployeeResponse;
 };
@@ -36,6 +45,27 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
 export const deleteEmployee = async (id: number) => {
   const response = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
   if (!response.ok) {
-    throw new Error("Failed to delete employee");
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to delete employee: ${response.status} `,
+    );
   }
+};
+
+export const updateEmployee = async (
+  id: number,
+  data: CreateEmployeeRequest,
+) => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to update employee: ${response.status}`,
+    );
+  }
+  return (await response.json()) as EmployeeResponse;
 };

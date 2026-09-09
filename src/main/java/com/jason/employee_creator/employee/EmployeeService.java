@@ -64,10 +64,12 @@ public class EmployeeService {
 
   public Employee update(Long id, CreateEmployeeRequest data) {
     Employee existing = findById(id);
+    log.info("Before mapping, existing.id={}", existing.getId());
     if (repo.existsByEmailAndIdNot(data.getEmail(), id)) {
       throw new DuplicateEmailException(data.getEmail());
     }
     mapper.map(data, existing);
+    log.info("After mapping, existing.id={}", existing.getId());
     log.info("Updated employee with id={} with new data", existing.getId());
     return repo.saveAndFlush(existing);
   }

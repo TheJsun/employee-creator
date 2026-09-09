@@ -4,7 +4,9 @@ import {
   deleteEmployee,
   getAllEmployees,
   getEmployeeById,
+  updateEmployee,
 } from "../api/employeeApi";
+import { CreateEmployeeRequest } from "../schemas/employee-schema";
 
 export function useEmployees() {
   return useQuery({
@@ -17,6 +19,7 @@ export function useEmployee(id: number) {
   return useQuery({
     queryKey: ["employees", id],
     queryFn: () => getEmployeeById(id),
+    enabled: !!id,
   });
 }
 
@@ -37,6 +40,18 @@ export function useDeleteEmployee() {
   return useMutation({
     mutationFn: deleteEmployee,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+}
+
+export function useUpdateEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: CreateEmployeeRequest }) =>
+      updateEmployee(id, data),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });

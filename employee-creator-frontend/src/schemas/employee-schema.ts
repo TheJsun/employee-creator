@@ -26,8 +26,8 @@ export const CreateEmployeeRequest = z.object({
   email: z.email("Invalid email").min(1, "Email is required"),
   phoneNumber: z
     .string()
-    .min(10, "Phone number is required")
-    .max(10, "Must be a valid phone number"),
+    .min(1, "Phone number is required")
+    .length(10, "Must be a valid phone number"),
   address: z.string().min(1, "Address is required").max(100),
   contractType: z.enum(["PERMANENT", "CONTRACT"]),
   startDate: z.string().min(1, "Start date is required"),

@@ -14,19 +14,17 @@ export default function StepNavigation({
 }: StepNavigationProps) {
   return (
     <div className={classes.buttons}>
-      <div className={classes[`buttons--navigation`]}>
-        {currentStep === 2 && (
-          <Button type="button" variant="secondary" onClick={onBack}>
-            Back
-          </Button>
-        )}
+      {currentStep === 2 && (
+        <Button type="button" variant="secondary" onClick={onBack}>
+          Back
+        </Button>
+      )}
 
-        {currentStep === 1 && (
-          <Button type="button" variant="secondary" onClick={onNext}>
-            Next
-          </Button>
-        )}
-      </div>
+      {currentStep === 1 && (
+        <Button type="button" variant="secondary" onClick={onNext}>
+          Next
+        </Button>
+      )}
     </div>
   );
 }

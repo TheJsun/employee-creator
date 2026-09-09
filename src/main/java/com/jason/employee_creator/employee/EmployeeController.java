@@ -33,7 +33,9 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<EmployeeResponse> findEmployeeById(Long id) {
+  public ResponseEntity<EmployeeResponse> findEmployeeById(
+    @PathVariable Long id
+  ) {
     Employee foundEmployee = this.employeeService.findById(id);
     return ResponseEntity.ok(EmployeeResponse.of(foundEmployee));
   }

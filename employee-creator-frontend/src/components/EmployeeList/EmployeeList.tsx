@@ -4,15 +4,15 @@ import classes from "./EmployeeList.module.scss";
 
 interface EmployeeListProps {
   employees: EmployeeResponse[];
+  onEdit: (employee: EmployeeResponse) => void;
   onDelete: (id: number) => void;
 }
 
 export default function EmployeeList({
   employees,
+  onEdit,
   onDelete,
 }: EmployeeListProps) {
-  const handleEdit = () => {};
-
   return (
     <section className={classes.employeeList}>
       <ul>
@@ -24,7 +24,7 @@ export default function EmployeeList({
             key={emp.id}
             employee={emp}
             onDelete={onDelete}
-            onEdit={handleEdit}
+            onEdit={onEdit}
           />
         ))}
       </ul>
