@@ -7,12 +7,15 @@ import Header from "../../components/Header/Header";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
 import { useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 const HomePage = () => {
   const { data: employees, isLoading, isError, error } = useEmployees();
   const deleteEmployeeMutation = useDeleteEmployee();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const pageSize = 4;
 
   const handleDelete = (id: number) => {
@@ -23,9 +26,16 @@ const HomePage = () => {
     navigate(`/employees/edit/${employee.id}`);
   };
 
+  const filteredEmployees = employees!.filter((emp) =>
+    `${emp.firstName} ${emp.middleName} ${emp.lastName}`
+      .toLowerCase()
+      .replaceAll("  ", " ")
+      .includes(searchTerm.toLowerCase()),
+  );
+
   const startIndex = (currentPage - 1) * pageSize;
 
-  const paginatedEmployees = employees?.slice(
+  const paginatedEmployees = filteredEmployees?.slice(
     startIndex,
     startIndex + pageSize,
   );
@@ -48,6 +58,11 @@ const HomePage = () => {
         }
       />
       <section className={classes.content}>
+        <SearchBar
+          placeholder="Search for employee..."
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
         <EmployeeList
           employees={paginatedEmployees!}
           onDelete={handleDelete}

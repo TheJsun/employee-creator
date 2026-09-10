@@ -1,0 +1,16 @@
+.container {
+  border-bottom: 1px solid grey;
+}
+
+.searchbar {
+  width: 100%;
+  border: none;
+  height: 2em;
+  padding: 1.2em;
+  border-radius: 8px;
+  font-family: var(--font);
+
+  &:focus {
+    outline: none;
+  }
+}
