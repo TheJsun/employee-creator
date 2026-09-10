@@ -5,11 +5,15 @@ import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
 import Header from "../../components/Header/Header";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
+import { useState } from "react";
+import Pagination from "../../components/Pagination/Pagination";
 
 const HomePage = () => {
   const { data: employees, isLoading, isError, error } = useEmployees();
   const deleteEmployeeMutation = useDeleteEmployee();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 4;
 
   const handleDelete = (id: number) => {
     deleteEmployeeMutation.mutate(id);
@@ -18,6 +22,14 @@ const HomePage = () => {
   const handleEdit = (employee: EmployeeResponse) => {
     navigate(`/employees/edit/${employee.id}`);
   };
+
+  const startIndex = (currentPage - 1) * pageSize;
+  console.log(employees);
+
+  const paginatedEmployees = employees?.slice(
+    startIndex,
+    startIndex + pageSize,
+  );
 
   if (isLoading) {
     return <p className={classes.loadingMessage}>Loading...</p>;
@@ -37,7 +49,7 @@ const HomePage = () => {
         </div>
 
         <EmployeeList
-          employees={employees!}
+          employees={paginatedEmployees!}
           onDelete={handleDelete}
           onEdit={handleEdit}
         />
@@ -45,6 +57,12 @@ const HomePage = () => {
           <p className={classes.loadingMessage}>Deleting employee...</p>
         )}
       </section>
+      <Pagination
+        currentPage={currentPage}
+        totalItems={employees!.length}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+      />
     </main>
   );
 };

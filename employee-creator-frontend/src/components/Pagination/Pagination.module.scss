@@ -1,0 +1,7 @@
+@use "../../scss/mixins/layout" as *;
+
+.container {
+  @include flex($gap: 0.5rem);
+  align-items: center;
+  gap: 2em;
+}
