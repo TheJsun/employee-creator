@@ -1,3 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import {
+  useCreateEmployee,
+  useUpdateEmployee,
+} from "../../../hooks/useEmployees";
 import Button from "../../Button/Button";
 import classes from "./StepNavigation.module.scss";
 
@@ -5,35 +10,62 @@ interface StepNavigationProps {
   currentStep: 1 | 2;
   onNext: () => void;
   onBack: () => void;
+  mode: "create" | "edit";
 }
 
 export default function StepNavigation({
   currentStep,
   onNext,
   onBack,
+  mode,
 }: StepNavigationProps) {
+  const createEmployeeMutation = useCreateEmployee();
+  const updateEmployeeMutation = useUpdateEmployee();
+  const navigate = useNavigate();
+  const handleCancel = () => {
+    navigate("/");
+  };
   return (
     <div className={classes.buttons}>
-      {currentStep === 2 && (
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onBack}
-          style={{ justifyContent: "flex-start" }}
-        >
-          Back
-        </Button>
-      )}
-
       {currentStep === 1 && (
         <Button
           type="button"
           variant="secondary"
           onClick={onNext}
-          style={{ justifyContent: "flex-end" }}
+          style={{ marginLeft: "auto" }}
         >
           Next
         </Button>
+      )}
+      {currentStep === 2 && (
+        <div className={classes.formButtons}>
+          <Button type="button" variant="secondary" onClick={onBack}>
+            Back
+          </Button>
+
+          <div>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={
+                mode === "edit"
+                  ? updateEmployeeMutation.isPending
+                  : createEmployeeMutation.isPending
+              }
+            >
+              {mode === "edit"
+                ? updateEmployeeMutation.isPending
+                  ? "Saving..."
+                  : "Save Changes"
+                : createEmployeeMutation.isPending
+                  ? "Creating..."
+                  : "Save"}
+            </Button>
+            <Button type="button" variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

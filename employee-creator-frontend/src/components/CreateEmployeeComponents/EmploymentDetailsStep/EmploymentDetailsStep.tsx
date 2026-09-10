@@ -2,20 +2,8 @@ import { useFormContext } from "react-hook-form";
 import type { CreateEmployeeRequest } from "../../../schemas/employee-schema";
 import { useEffect } from "react";
 import classes from "./EmploymentDetailsStep.module.scss";
-import {
-  useCreateEmployee,
-  useUpdateEmployee,
-} from "../../../hooks/useEmployees";
-import { useNavigate } from "react-router-dom";
-import Button from "../../Button/Button";
 
-interface EmploymentDetailsStepProps {
-  mode: "create" | "edit";
-}
-
-export default function EmploymentDetailsStep({
-  mode,
-}: EmploymentDetailsStepProps) {
+export default function EmploymentDetailsStep() {
   const {
     register,
     watch,
@@ -24,12 +12,6 @@ export default function EmploymentDetailsStep({
   } = useFormContext<CreateEmployeeRequest>();
 
   const isOnGoing = watch("onGoing");
-  const createEmployeeMutation = useCreateEmployee();
-  const updateEmployeeMutation = useUpdateEmployee();
-  const navigate = useNavigate();
-  const handleCancel = () => {
-    navigate("/");
-  };
 
   useEffect(() => {
     if (isOnGoing) {
@@ -127,30 +109,6 @@ export default function EmploymentDetailsStep({
       {errors.hoursPerWeek && (
         <p className={classes.error}>{errors.hoursPerWeek.message}</p>
       )}
-      <div className={classes.formButtons}>
-        <div>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={
-              mode === "edit"
-                ? updateEmployeeMutation.isPending
-                : createEmployeeMutation.isPending
-            }
-          >
-            {mode === "edit"
-              ? updateEmployeeMutation.isPending
-                ? "Saving..."
-                : "Save Changes"
-              : createEmployeeMutation.isPending
-                ? "Creating..."
-                : "Save"}
-          </Button>
-          <Button type="button" variant="secondary" onClick={handleCancel}>
-            Cancel
-          </Button>
-        </div>
-      </div>
     </section>
   );
 }

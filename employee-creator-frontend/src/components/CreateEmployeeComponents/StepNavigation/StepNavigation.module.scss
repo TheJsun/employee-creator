@@ -1,3 +1,15 @@
 .buttons {
   display: flex;
 }
+
+.formButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  > div {
+    display: flex;
+    gap: 8px;
+  }
+}

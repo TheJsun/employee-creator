@@ -73,12 +73,13 @@ export default function CreateEmployeeForm({
       >
         <div className={classes.formCard}>
           {currentStep === 1 && <PersonalInfoStep />}
-          {currentStep === 2 && <EmploymentDetailsStep mode={mode} />}
+          {currentStep === 2 && <EmploymentDetailsStep />}
 
           <StepNavigation
             currentStep={currentStep}
             onNext={handleNext}
             onBack={handleBack}
+            mode={mode}
           />
           {activeMutation.isError && (
             <p className={classes.error}>{activeMutation.error.message}</p>
