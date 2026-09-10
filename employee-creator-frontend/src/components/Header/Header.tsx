@@ -18,7 +18,6 @@ export default function Header({ title, button }: HeaderProps) {
         </div>
 
         <h1 className={classes.header__title}>{title}</h1>
-        <div />
       </div>
     </header>
   );

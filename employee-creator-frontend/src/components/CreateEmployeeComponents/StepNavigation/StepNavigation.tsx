@@ -15,13 +15,23 @@ export default function StepNavigation({
   return (
     <div className={classes.buttons}>
       {currentStep === 2 && (
-        <Button type="button" variant="secondary" onClick={onBack}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onBack}
+          style={{ justifyContent: "flex-start" }}
+        >
           Back
         </Button>
       )}
 
       {currentStep === 1 && (
-        <Button type="button" variant="secondary" onClick={onNext}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onNext}
+          style={{ justifyContent: "flex-end" }}
+        >
           Next
         </Button>
       )}

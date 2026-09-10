@@ -14,7 +14,6 @@ import EmploymentDetailsStep from "../EmploymentDetailsStep/EmploymentDetailsSte
 import StepNavigation from "../StepNavigation/StepNavigation";
 import { useNavigate } from "react-router-dom";
 import classes from "./CreateEmployeeForm.module.scss";
-import Button from "../../Button/Button";
 import { toFormData } from "../../../services/form-services";
 
 interface CreateEmployeeProps {
@@ -53,10 +52,6 @@ export default function CreateEmployeeForm({
 
   const handleBack = () => setCurrentStep(1);
 
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   const onSubmit = (data: CreateEmployeeRequest) => {
     if (mode === "edit" && employeeId) {
       updateEmployeeMutation.mutate(
@@ -76,42 +71,19 @@ export default function CreateEmployeeForm({
         className={classes.employeeForm}
         onSubmit={methods.handleSubmit(onSubmit)}
       >
-        {currentStep === 1 && <PersonalInfoStep />}
-        {currentStep === 2 && <EmploymentDetailsStep />}
-        <div className={classes.formButtons}>
-          {currentStep === 2 && (
-            <div>
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={
-                  mode === "edit"
-                    ? updateEmployeeMutation.isPending
-                    : createEmployeeMutation.isPending
-                }
-              >
-                {mode === "edit"
-                  ? updateEmployeeMutation.isPending
-                    ? "Saving..."
-                    : "Save Changes"
-                  : createEmployeeMutation.isPending
-                    ? "Creating..."
-                    : "Save"}
-              </Button>
-              <Button type="button" variant="secondary" onClick={handleCancel}>
-                Cancel
-              </Button>
-            </div>
+        <div className={classes.formCard}>
+          {currentStep === 1 && <PersonalInfoStep />}
+          {currentStep === 2 && <EmploymentDetailsStep mode={mode} />}
+
+          <StepNavigation
+            currentStep={currentStep}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+          {activeMutation.isError && (
+            <p className={classes.error}>{activeMutation.error.message}</p>
           )}
         </div>
-        <StepNavigation
-          currentStep={currentStep}
-          onNext={handleNext}
-          onBack={handleBack}
-        />
-        {activeMutation.isError && (
-          <p className={classes.error}>{activeMutation.error.message}</p>
-        )}
       </form>
     </FormProvider>
   );

@@ -7,10 +7,11 @@ export default function PersonalInfoStep() {
     register,
     formState: { errors },
   } = useFormContext<CreateEmployeeRequest>();
+
   return (
     <section className={classes.employeeDetails}>
       <article className={classes.employeeDetails__personalInfo}>
-        <h3>Personal Information</h3>
+        <h3 className={classes.heading}>Personal Information</h3>
 
         <label className={classes.label} htmlFor="firstName">
           First name
@@ -49,7 +50,7 @@ export default function PersonalInfoStep() {
         )}
       </article>
       <article className={classes.employeeDetails__contactInfo}>
-        <h3>Contact Details</h3>
+        <h3 className={classes.heading}>Contact Details</h3>
         <label className={classes.label} htmlFor="email">
           Email address
         </label>

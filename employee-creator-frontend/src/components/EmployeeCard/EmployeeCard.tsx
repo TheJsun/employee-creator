@@ -1,6 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
 import { getAvatarColor, getInitials } from "../../services/employee-profile";
-import Button from "../Button/Button";
 import classes from "./EmployeeCard.module.scss";
 
 interface EmployeeCardProps {
@@ -16,6 +16,18 @@ export default function EmployeeCard({
 }: EmployeeCardProps) {
   const initials = getInitials(employee.firstName, employee.lastName);
   const avatarColour = getAvatarColor(employee.email);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <article className={classes.employeeCard}>
@@ -38,7 +50,7 @@ export default function EmployeeCard({
         </div>
         <div className={classes.employmentDetails__row}>
           <p>Employment Type</p>
-          <p>{employee.fullTimeOrPartTime}</p>
+          <p>{employee.fullTimeOrPartTime.replace(/_/g, " ")}</p>
         </div>
         <div className={classes.employmentDetails__row}>
           <p>Start Date:</p>
@@ -52,22 +64,57 @@ export default function EmployeeCard({
 
       <div className={classes.employeeContacts}>
         <div className={classes.employeeContacts__row}>
-          <p>Email:</p>
+          <img
+            width="15"
+            height="15"
+            src="https://img.icons8.com/fluency-systems-regular/48/new-post.png"
+            alt="new-post"
+          />
           <p>{employee.email}</p>
         </div>
         <div className={classes.employeeContacts__row}>
-          <p>Number:</p>
+          <img
+            width="15"
+            height="15"
+            src="https://img.icons8.com/fluency-systems-regular/48/phone.png"
+            alt="phone"
+          />
           <p>{employee.phoneNumber}</p>
         </div>
       </div>
+      <div className={classes.menuContainer} ref={menuRef}>
+        <button
+          className={classes.menuTrigger}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label="Employee actions"
+          aria-expanded={isMenuOpen}
+        >
+          ⋮
+        </button>
 
-      {/* <div className={classes.employeeCard__btns}>
-        <Button children={<p>Edit</p>} onClick={() => onEdit(employee)} />
-        <Button
-          children={<p>Remove</p>}
-          onClick={() => onDelete(employee.id)}
-        />
-      </div> */}
+        {isMenuOpen && (
+          <div className={classes.menuDropdown}>
+            <button
+              className={classes.menuItem}
+              onClick={() => {
+                setIsMenuOpen(false);
+                onEdit(employee);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              className={classes.menuItem}
+              onClick={() => {
+                setIsMenuOpen(false);
+                onDelete(employee.id);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
     </article>
   );
 }

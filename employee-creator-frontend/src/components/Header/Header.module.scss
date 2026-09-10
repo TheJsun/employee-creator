@@ -2,17 +2,18 @@
 @use "../../scss/mixins/media" as q;
 
 .header {
-  display: grid;
-  grid-template-rows: 1fr auto 1fr;
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  height: 18vh;
+  height: 14vh;
   background-color: var(--bg-primary);
   color: var(--text-white);
   padding: 1em 2em;
+  align-items: center;
 
   &__btn {
     grid-row: 1;
-    align-self: start;
+    align-self: center;
   }
   &__title {
     grid-row: 2;
@@ -23,19 +24,18 @@
 .headerContent {
   width: 100%;
   max-width: 600px;
-  margin: 0 auto;
-
   display: flex;
+  gap: 1em;
 }
 
 @include q.lg {
   .headerContent {
-    max-width: 900px;
+    max-width: 800px;
   }
 }
 
 @include q.xl {
   .headerContent {
-    max-width: 1200px;
+    max-width: 1050px;
   }
 }

@@ -2,14 +2,27 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 70vh;
-}
-
-.formButtons {
-  padding-left: 1em;
+  min-height: 86vh;
+  width: 100%;
+  align-items: center;
+  border: 1px solid blue;
 }
 
 .error {
   color: red;
   text-align: center;
+}
+
+.formCard {
+  width: 80%;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  padding: 1em;
+  justify-content: space-between;
+
+  background-color: white;
+  border-radius: 15px;
+  border: 0.1px solid rgb(229, 229, 229);
 }
