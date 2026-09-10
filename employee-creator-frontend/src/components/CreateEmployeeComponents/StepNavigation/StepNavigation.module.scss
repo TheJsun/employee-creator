@@ -1,5 +1,12 @@
+// StepNavigation.module.scss
+@use "../../../scss/variables/variables" as *;
+
 .buttons {
   display: flex;
+  align-items: center;
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid #eaeaea;
 }
 
 .formButtons {
@@ -10,6 +17,10 @@
 
   > div {
     display: flex;
-    gap: 8px;
+    gap: 0.75rem;
   }
+}
+
+.nextButton {
+  margin-left: auto;
 }

@@ -25,14 +25,15 @@ export default function StepNavigation({
   const handleCancel = () => {
     navigate("/");
   };
+
   return (
     <div className={classes.buttons}>
       {currentStep === 1 && (
         <Button
           type="button"
-          variant="secondary"
+          variant="primary"
           onClick={onNext}
-          style={{ marginLeft: "auto" }}
+          className={classes.nextButton}
         >
           Next
         </Button>
@@ -44,6 +45,9 @@ export default function StepNavigation({
           </Button>
 
           <div>
+            <Button type="button" variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
             <Button
               type="submit"
               variant="primary"
@@ -60,9 +64,6 @@ export default function StepNavigation({
                 : createEmployeeMutation.isPending
                   ? "Creating..."
                   : "Save"}
-            </Button>
-            <Button type="button" variant="secondary" onClick={handleCancel}>
-              Cancel
             </Button>
           </div>
         </div>

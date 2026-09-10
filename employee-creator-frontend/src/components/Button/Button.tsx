@@ -4,7 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
-  variant?: "primary" | "secondary" | "danger";
+  variant?: "primary" | "secondary" | "danger" | "accent";
   disabled?: boolean;
 }
 
@@ -14,6 +14,7 @@ export default function Button({
   type = "button",
   variant = "primary",
   disabled = false,
+  className,
   ...rest
 }: ButtonProps) {
   return (
@@ -21,7 +22,7 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${classes.btn} ${classes[variant]}`}
+      className={`${classes.btn} ${classes[variant]} ${className ?? ""}`.trim()}
       {...rest}
     >
       {children}

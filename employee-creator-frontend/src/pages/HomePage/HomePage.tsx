@@ -24,7 +24,6 @@ const HomePage = () => {
   };
 
   const startIndex = (currentPage - 1) * pageSize;
-  console.log(employees);
 
   const paginatedEmployees = employees?.slice(
     startIndex,
@@ -37,17 +36,18 @@ const HomePage = () => {
   if (isError) {
     return <p>Error: {error.message}</p>;
   }
+
   return (
     <main className={classes.homepage}>
-      <Header title="Employees" />
-      <section className={classes.content}>
-        <div className={classes.addEmployeeCard}>
-          <p>Please click on 'Edit' to find more details of each employee.</p>
-          <Button onClick={() => navigate("/employees/new")}>
+      <Header
+        title="Employees"
+        action={
+          <Button variant="accent" onClick={() => navigate("/employees/new")}>
             Add Employee
           </Button>
-        </div>
-
+        }
+      />
+      <section className={classes.content}>
         <EmployeeList
           employees={paginatedEmployees!}
           onDelete={handleDelete}

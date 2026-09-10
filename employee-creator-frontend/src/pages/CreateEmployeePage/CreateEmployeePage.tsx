@@ -32,7 +32,7 @@ const CreateEmployeePage = () => {
 
   return (
     <main>
-      <Header title="Employee details" button="Back" />
+      <Header title="Register Form" button="Back" />
 
       {renderBody()}
     </main>
