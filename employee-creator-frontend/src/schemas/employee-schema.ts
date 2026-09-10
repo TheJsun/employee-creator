@@ -51,9 +51,15 @@ export const CreateEmployeeRequest = z
       path: ["finishDate"],
     },
   )
-  .transform((data) => ({
-    ...data,
-    finishDate: data.onGoing ? null : data.finishDate,
-  }));
+  .refine(
+    (data) => {
+      if (!data.finishDate) return true;
+      return new Date(data.finishDate) >= new Date(data.startDate);
+    },
+    {
+      message: "Finish date cannot be earlier than start date",
+      path: ["finishDate"],
+    },
+  );
 
 export type CreateEmployeeRequest = z.infer<typeof CreateEmployeeRequest>;
