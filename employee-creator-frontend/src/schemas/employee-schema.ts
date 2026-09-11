@@ -24,7 +24,10 @@ export const CreateEmployeeRequest = z
     firstName: z.string().min(1, "First name is required").max(50),
     lastName: z.string().min(1, "Last name is required").max(50),
     middleName: z.string().max(50).optional(),
-    email: z.email("Invalid email").min(1, "Email is required"),
+    email: z
+      .email("Invalid email")
+      .min(1, "Email is required")
+      .max(50, "Email must be 40 characters or fewer"),
     phoneNumber: z
       .string()
       .min(1, "Phone number is required")

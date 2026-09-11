@@ -29,7 +29,7 @@ export default function PersonalInfoStep() {
           Middle name (if applicable)
         </label>
         <input
-          className={`${classes.field} ${errors.firstName ? classes["field--invalid"] : ""}`.trim()}
+          className={`${classes.field} ${errors.middleName ? classes["field--invalid"] : ""}`.trim()}
           id="middleName"
           {...register("middleName")}
         />
@@ -41,7 +41,7 @@ export default function PersonalInfoStep() {
           Last name
         </label>
         <input
-          className={`${classes.field} ${errors.firstName ? classes["field--invalid"] : ""}`.trim()}
+          className={`${classes.field} ${errors.lastName ? classes["field--invalid"] : ""}`.trim()}
           id="lastName"
           {...register("lastName")}
         />
@@ -55,7 +55,7 @@ export default function PersonalInfoStep() {
           Email address
         </label>
         <input
-          className={`${classes.field} ${errors.firstName ? classes["field--invalid"] : ""}`.trim()}
+          className={`${classes.field} ${errors.email ? classes["field--invalid"] : ""}`.trim()}
           id="email"
           type="email"
           {...register("email")}
@@ -68,7 +68,7 @@ export default function PersonalInfoStep() {
           Mobile number
         </label>
         <input
-          className={`${classes.field} ${errors.firstName ? classes["field--invalid"] : ""}`.trim()}
+          className={`${classes.field} ${errors.phoneNumber ? classes["field--invalid"] : ""}`.trim()}
           id="phoneNumber"
           {...register("phoneNumber")}
         />
@@ -80,7 +80,7 @@ export default function PersonalInfoStep() {
           Residential address
         </label>
         <input
-          className={`${classes.field} ${errors.firstName ? classes["field--invalid"] : ""}`.trim()}
+          className={`${classes.field} ${errors.address ? classes["field--invalid"] : ""}`.trim()}
           id="address"
           {...register("address")}
         />

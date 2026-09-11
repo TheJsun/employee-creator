@@ -100,7 +100,7 @@ export default function EmploymentDetailsStep() {
         Hours per week{" "}
       </label>
       <input
-        className={classes.field}
+        className={`${classes.field} ${errors.hoursPerWeek ? classes["field--invalid"] : ""}`.trim()}
         id="hoursPerWeek"
         type="number"
         {...register("hoursPerWeek", { valueAsNumber: true })}

@@ -5,9 +5,12 @@ import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
 import Header from "../../components/Header/Header";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { useColumns } from "../../hooks/useBreakpoints";
+
+const ROWS_PER_PAGE = 2;
 
 const HomePage = () => {
   const { data: employees, isLoading, isError, error } = useEmployees();
@@ -15,8 +18,12 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const columns = useColumns();
+  const pageSize = columns * ROWS_PER_PAGE;
 
-  const pageSize = 4;
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [columns, searchTerm]);
 
   const handleDelete = (id: number) => {
     deleteEmployeeMutation.mutate(id);
@@ -25,6 +32,13 @@ const HomePage = () => {
   const handleEdit = (employee: EmployeeResponse) => {
     navigate(`/employees/edit/${employee.id}`);
   };
+
+  if (isLoading) {
+    return <p className={classes.loadingMessage}>Loading...</p>;
+  }
+  if (isError) {
+    return <p>Error: {error.message}</p>;
+  }
 
   const filteredEmployees = employees!.filter((emp) =>
     `${emp.firstName} ${emp.middleName} ${emp.lastName}`
@@ -40,13 +54,6 @@ const HomePage = () => {
     startIndex + pageSize,
   );
 
-  if (isLoading) {
-    return <p className={classes.loadingMessage}>Loading...</p>;
-  }
-  if (isError) {
-    return <p>Error: {error.message}</p>;
-  }
-
   return (
     <main className={classes.homepage}>
       <Header
@@ -58,16 +65,18 @@ const HomePage = () => {
         }
       />
       <section className={classes.content}>
-        <SearchBar
-          placeholder="Search for employee..."
-          value={searchTerm}
-          onChange={setSearchTerm}
-        />
-        <EmployeeList
-          employees={paginatedEmployees!}
-          onDelete={handleDelete}
-          onEdit={handleEdit}
-        />
+        <div className={classes.contentInner}>
+          <SearchBar
+            placeholder="Search for employee..."
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <EmployeeList
+            employees={paginatedEmployees}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+          />
+        </div>
         {deleteEmployeeMutation.isPending && (
           <p className={classes.loadingMessage}>Deleting employee...</p>
         )}

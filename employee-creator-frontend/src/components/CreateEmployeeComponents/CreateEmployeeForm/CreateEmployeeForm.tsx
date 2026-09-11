@@ -70,6 +70,7 @@ export default function CreateEmployeeForm({
       <form
         className={classes.employeeForm}
         onSubmit={methods.handleSubmit(onSubmit)}
+        autoComplete="off"
       >
         <div className={classes.formCard}>
           {currentStep === 1 && <PersonalInfoStep />}
