@@ -51,7 +51,7 @@ export function useUpdateEmployee() {
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: CreateEmployeeRequest }) =>
       updateEmployee(id, data),
-    onSuccess: (_, variables) => {
+    onSuccess: (_) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
