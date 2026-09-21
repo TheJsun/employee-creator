@@ -56,7 +56,7 @@ export default function CreateEmployeeForm({
     if (mode === "edit" && employeeId) {
       updateEmployeeMutation.mutate(
         { id: employeeId, data },
-        { onSuccess: () => navigate("/") },
+        { onSuccess: () => navigate(-1) },
       );
     } else {
       createEmployeeMutation.mutate(data, {

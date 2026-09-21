@@ -1,0 +1,20 @@
+.employeeCard {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 0.5em;
+  gap: 1em;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid red;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+h1 {
+  margin: 0;
+}

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
-import { getAvatarColor, getInitials } from "../../services/employee-profile";
 import classes from "./EmployeeCard.module.scss";
+import { EmployeeAvatar } from "../EmployeeAvatar/EmployeeAvatar";
+import { MenuDropdown } from "../MenuDropDown/MenuDropDown";
 
 interface EmployeeCardProps {
   employee: EmployeeResponse;
@@ -14,30 +15,10 @@ export default function EmployeeCard({
   onDelete,
   onEdit,
 }: EmployeeCardProps) {
-  const initials = getInitials(employee.firstName, employee.lastName);
-  const avatarColour = getAvatarColor(employee.email);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <article className={classes.employeeCard}>
       <div className={classes.employeeIdentity}>
-        <div
-          className={classes.employeeIdentity__avatar}
-          style={{ backgroundColor: avatarColour }}
-        >
-          <p className={classes.employeeIdentity__initials}>{initials}</p>
-        </div>
+        <EmployeeAvatar employee={employee} />
         <p className={classes.employeeIdentity__name}>
           {employee.firstName} {employee?.middleName} {employee.lastName}
         </p>
@@ -82,39 +63,7 @@ export default function EmployeeCard({
           <p>{employee.phoneNumber}</p>
         </div>
       </div>
-      <div className={classes.menuContainer} ref={menuRef}>
-        <button
-          className={classes.menuTrigger}
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          aria-label="Employee actions"
-          aria-expanded={isMenuOpen}
-        >
-          ⋮
-        </button>
-
-        {isMenuOpen && (
-          <div className={classes.menuDropdown}>
-            <button
-              className={classes.menuItem}
-              onClick={() => {
-                setIsMenuOpen(false);
-                onEdit(employee);
-              }}
-            >
-              Edit
-            </button>
-            <button
-              className={classes.menuItem}
-              onClick={() => {
-                setIsMenuOpen(false);
-                onDelete(employee.id);
-              }}
-            >
-              Delete
-            </button>
-          </div>
-        )}
-      </div>
+      <MenuDropdown employee={employee} onDelete={onDelete} onEdit={onEdit} />
     </article>
   );
 }

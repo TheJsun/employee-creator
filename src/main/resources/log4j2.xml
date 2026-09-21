@@ -6,6 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
+    
         <Logger name="com.jason.employee_creator" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>

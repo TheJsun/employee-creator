@@ -6,10 +6,12 @@ interface HeaderProps {
   title: string;
   button?: React.ReactNode;
   action?: React.ReactNode;
+  onBack?: () => void;
 }
 
-export default function Header({ title, button, action }: HeaderProps) {
+export default function Header({ title, button, action, onBack }: HeaderProps) {
   const navigate = useNavigate();
+  const handleBack = onBack ?? (() => navigate("/"));
 
   return (
     <header className={classes.header}>
@@ -19,7 +21,7 @@ export default function Header({ title, button, action }: HeaderProps) {
             <Button
               variant="accent"
               className={classes.header__btn}
-              onClick={() => navigate("/")}
+              onClick={handleBack}
             >
               {button}
             </Button>

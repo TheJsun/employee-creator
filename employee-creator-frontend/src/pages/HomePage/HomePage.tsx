@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useColumns } from "../../hooks/useBreakpoints";
+import { useEmployeeActions } from "../../hooks/useEmployeeActions";
 
 const ROWS_PER_PAGE = 2;
 
@@ -21,17 +22,11 @@ const HomePage = () => {
   const columns = useColumns();
   const pageSize = columns * ROWS_PER_PAGE;
 
+  const { handleDelete, handleEdit, isDeleting } = useEmployeeActions();
+
   useEffect(() => {
     setCurrentPage(1);
   }, [columns, searchTerm]);
-
-  const handleDelete = (id: number) => {
-    deleteEmployeeMutation.mutate(id);
-  };
-
-  const handleEdit = (employee: EmployeeResponse) => {
-    navigate(`/employees/edit/${employee.id}`);
-  };
 
   if (isLoading) {
     return <p className={classes.loadingMessage}>Loading...</p>;
@@ -54,6 +49,8 @@ const HomePage = () => {
     startIndex + pageSize,
   );
 
+  console.log(paginatedEmployees);
+
   return (
     <main className={classes.homepage}>
       <Header
@@ -64,6 +61,9 @@ const HomePage = () => {
           </Button>
         }
       />
+      <Button variant="accent" onClick={() => navigate("/employees/31")}>
+        view employee 31
+      </Button>
       <section className={classes.content}>
         <div className={classes.contentInner}>
           <SearchBar
@@ -81,6 +81,7 @@ const HomePage = () => {
           <p className={classes.loadingMessage}>Deleting employee...</p>
         )}
       </section>
+      {isDeleting && <p>Deleting employee...</p>}
       <Pagination
         currentPage={currentPage}
         totalItems={employees!.length}

@@ -30,25 +30,11 @@ p {
     transform: translateY(-1px);
   }
 }
+
 .employeeIdentity {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  &__avatar {
-    display: flex;
-    height: 4em;
-    width: 4em;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__initials {
-    color: var(--text-white);
-    font-size: 14px;
-    font-weight: 700;
-  }
 
   &__name {
     margin-top: 0.7em;
@@ -95,55 +81,5 @@ p {
     flex-direction: row;
     justify-content: start;
     gap: 1em;
-  }
-}
-
-.menuContainer {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-}
-
-.menuTrigger {
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: transparent;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  line-height: 1;
-  color: #6b6b6b;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f2f2f2;
-  }
-}
-
-.menuDropdown {
-  position: absolute;
-  top: 32px;
-  right: 0;
-  background: #ffffff;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  min-width: 100px;
-  overflow: hidden;
-  z-index: 10;
-}
-
-.menuItem {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  border: none;
-  background: transparent;
-  font-size: 0.85rem;
-  color: #1a1a1a;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f7f7f7;
   }
 }

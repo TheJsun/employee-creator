@@ -2,16 +2,15 @@ export function getInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 }
 
-// Deterministic hash-based color, so the same employee always gets the same color
 const AVATAR_COLORS = [
-  "#6366f1", // indigo
-  "#ec4899", // pink
-  "#14b8a6", // teal
-  "#f59e0b", // amber
-  "#8b5cf6", // violet
-  "#ef4444", // red
-  "#0ea5e9", // sky
-  "#10b981", // emerald
+  "#6366f1", 
+  "#ec4899", 
+  "#14b8a6", 
+  "#f59e0b", 
+  "#8b5cf6", 
+  "#ef4444", 
+  "#0ea5e9", 
+  "#10b981", 
 ];
 
 export function getAvatarColor(seed: string): string {
