@@ -1,20 +1,47 @@
+.pageContainer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+}
+
 .employeeCard {
   display: flex;
   position: relative;
   width: 100%;
   height: auto;
-  padding: 0.5em;
   gap: 1em;
   align-items: center;
   justify-content: flex-start;
-  border: 1px solid red;
+  padding-bottom: 1em;
+  border-bottom: 1px solid grey;
 
   &__text {
     display: flex;
     flex-direction: column;
   }
+
+  &__name {
+    font-weight: 600;
+    font-size: 25px;
+  }
 }
 
 h1 {
   margin: 0;
+}
+
+main {
+  height: 100vh;
 }

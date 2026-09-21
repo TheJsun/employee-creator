@@ -68,7 +68,7 @@ export default function CreateEmployeeForm({
   return (
     <FormProvider {...methods}>
       <form
-        className={classes.employeeForm}
+        className={classes.formContainer}
         onSubmit={methods.handleSubmit(onSubmit)}
         autoComplete="off"
       >
