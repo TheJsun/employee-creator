@@ -1,7 +1,6 @@
 .menuContainer {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  display: flex;
+  justify-content: center;
 }
 
 .menuTrigger {
@@ -22,8 +21,6 @@
 
 .menuDropdown {
   position: absolute;
-  top: 32px;
-  right: 0;
   background: #ffffff;
   border: 1px solid #eaeaea;
   border-radius: 8px;

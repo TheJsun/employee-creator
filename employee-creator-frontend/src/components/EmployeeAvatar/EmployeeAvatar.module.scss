@@ -18,3 +18,15 @@
     font-weight: 700;
   }
 }
+
+.sm {
+  .employeeAvatar__avatar {
+    height: 2.5em;
+    width: 2.5em;
+  }
+
+  .employeeAvatar__initials {
+    font-size: 0.8em;
+    font-weight: 400;
+  }
+}

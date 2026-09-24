@@ -4,14 +4,13 @@ import { useDeleteEmployee, useEmployees } from "../../hooks/useEmployees";
 import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
 import Header from "../../components/Header/Header";
-import type { EmployeeResponse } from "../../schemas/employee-schema";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useColumns } from "../../hooks/useBreakpoints";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
 
-const ROWS_PER_PAGE = 2;
+const ROWS_PER_PAGE = 5;
 
 const HomePage = () => {
   const { data: employees, isLoading, isError, error } = useEmployees();
@@ -61,9 +60,6 @@ const HomePage = () => {
           </Button>
         }
       />
-      <Button variant="accent" onClick={() => navigate("/employees/31")}>
-        view employee 31
-      </Button>
       <section className={classes.content}>
         <div className={classes.contentInner}>
           <SearchBar

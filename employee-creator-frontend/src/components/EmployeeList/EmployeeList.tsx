@@ -15,6 +15,11 @@ export default function EmployeeList({
 }: EmployeeListProps) {
   return (
     <section className={classes.employeeListContainer}>
+      <header className={classes.employeeListHeader}>
+        <p>Name</p>
+        <p>Department</p>
+        <p></p>
+      </header>
       {employees.length === 0 && (
         <h4>No employees registered, add one above.</h4>
       )}

@@ -2,30 +2,25 @@
 
 .employeeListContainer {
   margin-top: 1em;
+  background-color: #ffffff;
+  border: 1px solid #e7e8ef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.employeeListHeader {
+  display: grid;
+  grid-template-columns: 6fr 4fr 1fr;
+  padding: 1em 1.5em;
+  border-bottom: 1px solid #e7e8ef;
+  color: grey;
+  font-weight: 500;
+  font-size: 12px;
+  justify-content: start;
 }
 
 .employeeList {
   width: 100%;
-  display: grid;
-  justify-items: stretch;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1em;
-}
-
-@include q.md {
-  .employeeList {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@include q.lg {
-  .employeeList {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@include q.xl {
-  .employeeList {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  display: flex;
+  flex-direction: column;
 }

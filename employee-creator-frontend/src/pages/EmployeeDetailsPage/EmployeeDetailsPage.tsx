@@ -13,8 +13,6 @@ export function EmployeeDetailsPage() {
   const { data: employee, isLoading, isError } = useEmployee(employeeId!);
   const { handleDelete, handleEdit, isDeleting } = useEmployeeActions();
 
-  console.log(employee);
-
   if (isLoading) {
     return <p className={classes.loadingMessage}>Loading employee...</p>;
   }
@@ -45,7 +43,7 @@ export function EmployeeDetailsPage() {
       <section className={classes.pageContainer}>
         <section className={classes.detailsContainer}>
           <article className={classes.employeeCard}>
-            <EmployeeAvatar employee={employee} />
+            <EmployeeAvatar size="md" employee={employee} />
             <div className={classes.employeeCard__text}>
               <h1 className={classes.employeeCard__name}>
                 {employee?.firstName} {employee?.middleName}{" "}

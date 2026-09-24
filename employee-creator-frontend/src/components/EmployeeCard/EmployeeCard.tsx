@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
 import classes from "./EmployeeCard.module.scss";
 import { EmployeeAvatar } from "../EmployeeAvatar/EmployeeAvatar";
 import { MenuDropdown } from "../MenuDropDown/MenuDropDown";
+import { de } from "zod/locales";
+import { useNavigate } from "react-router-dom";
 
 interface EmployeeCardProps {
   employee: EmployeeResponse;
@@ -15,54 +16,21 @@ export default function EmployeeCard({
   onDelete,
   onEdit,
 }: EmployeeCardProps) {
+  const navigate = useNavigate();
+
   return (
-    <article className={classes.employeeCard}>
+    <article
+      className={classes.employeeCard}
+      onClick={() => navigate(`/employees/${employee.id}`)}
+    >
       <div className={classes.employeeIdentity}>
-        <EmployeeAvatar employee={employee} />
+        <EmployeeAvatar size="sm" employee={employee} />
         <p className={classes.employeeIdentity__name}>
           {employee.firstName} {employee?.middleName} {employee.lastName}
         </p>
       </div>
 
-      <div className={classes.employmentDetails}>
-        <div className={classes.employmentDetails__row}>
-          <p>Contract Type:</p>
-          <p>{employee.contractType}</p>
-        </div>
-        <div className={classes.employmentDetails__row}>
-          <p>Employment Type</p>
-          <p>{employee.fullTimeOrPartTime.replace(/_/g, " ")}</p>
-        </div>
-        <div className={classes.employmentDetails__row}>
-          <p>Start Date:</p>
-          <p>{employee.startDate}</p>
-        </div>
-        <div className={classes.employmentDetails__row}>
-          <p>Finish date:</p>
-          {employee.onGoing ? <p>On-going</p> : <p>{employee.finishDate}</p>}
-        </div>
-      </div>
-
-      <div className={classes.employeeContacts}>
-        <div className={classes.employeeContacts__row}>
-          <img
-            width="15"
-            height="15"
-            src="https://img.icons8.com/fluency-systems-regular/48/new-post.png"
-            alt="new-post"
-          />
-          <p>{employee.email}</p>
-        </div>
-        <div className={classes.employeeContacts__row}>
-          <img
-            width="15"
-            height="15"
-            src="https://img.icons8.com/fluency-systems-regular/48/phone.png"
-            alt="phone"
-          />
-          <p>{employee.phoneNumber}</p>
-        </div>
-      </div>
+      <p>test</p>
       <MenuDropdown employee={employee} onDelete={onDelete} onEdit={onEdit} />
     </article>
   );
