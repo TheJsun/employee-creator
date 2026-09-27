@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export type ContractType = "PERMANENT" | "CONTRACT";
-export type FullTimeOrPartTime = "FULL_TIME" | "PART_TIME";
+export type employmentType = "FULL_TIME" | "PART_TIME";
 
 export interface EmployeeResponse {
   id: number;
@@ -15,7 +15,7 @@ export interface EmployeeResponse {
   startDate: string;
   finishDate: string | null;
   onGoing: boolean;
-  fullTimeOrPartTime: FullTimeOrPartTime;
+  employmentType: employmentType;
   hoursPerWeek: number;
 }
 
@@ -37,7 +37,7 @@ export const CreateEmployeeRequest = z
     startDate: z.string().min(1, "Start date is required"),
     finishDate: z.string().optional().nullable(),
     onGoing: z.boolean(),
-    fullTimeOrPartTime: z.enum(["FULL_TIME", "PART_TIME"]),
+    employmentType: z.enum(["FULL_TIME", "PART_TIME"]),
     hoursPerWeek: z
       .number()
       .int()

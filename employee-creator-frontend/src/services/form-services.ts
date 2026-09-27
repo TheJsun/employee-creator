@@ -15,7 +15,7 @@ export function toFormData(employee: EmployeeResponse): CreateEmployeeRequest {
     startDate: employee.startDate,
     finishDate: employee.finishDate ?? undefined,
     onGoing: employee.onGoing,
-    fullTimeOrPartTime: employee.fullTimeOrPartTime,
+    employmentType: employee.employmentType,
     hoursPerWeek: employee.hoursPerWeek,
   };
 }

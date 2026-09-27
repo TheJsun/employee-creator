@@ -78,7 +78,7 @@ export default function EmploymentDetailsStep() {
           <input
             type="radio"
             value="FULL_TIME"
-            {...register("fullTimeOrPartTime")}
+            {...register("employmentType")}
           />
           Full-time
         </label>
@@ -87,12 +87,12 @@ export default function EmploymentDetailsStep() {
           <input
             type="radio"
             value="PART_TIME"
-            {...register("fullTimeOrPartTime")}
+            {...register("employmentType")}
           />
           Part-time
         </label>
-        {errors.fullTimeOrPartTime && (
-          <p className={classes.error}>{errors.fullTimeOrPartTime.message}</p>
+        {errors.employmentType && (
+          <p className={classes.error}>{errors.employmentType.message}</p>
         )}
       </div>
 
