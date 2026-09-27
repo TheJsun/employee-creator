@@ -1,12 +1,15 @@
 package com.jason.employee_creator.employee.entities;
 
+import com.jason.employee_creator.department.entities.Department;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -69,6 +72,9 @@ public class Employee {
   @Min(1)
   @Max(168)
   private Integer hoursPerWeek;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Department department;
 
   public Long getId() {
     return id;
@@ -172,5 +178,13 @@ public class Employee {
 
   public void setHoursPerWeek(Integer hoursPerWeek) {
     this.hoursPerWeek = hoursPerWeek;
+  }
+
+  public Department getDepartment() {
+    return department;
+  }
+
+  public void setDepartment(Department department) {
+    this.department = department;
   }
 }

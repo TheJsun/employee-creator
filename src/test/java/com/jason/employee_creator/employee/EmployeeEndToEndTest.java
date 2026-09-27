@@ -198,7 +198,7 @@ public class EmployeeEndToEndTest {
   }
 
   @Test
-  public void createEmployee_duplicateEmail_returnsConflict() {
+  public void createEmployee_duplicateField_returnsConflict() {
     Employee employee1 = new Employee();
     employee1.setFirstName("Jane");
     employee1.setLastName("Doe");

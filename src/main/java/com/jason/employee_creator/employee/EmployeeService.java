@@ -1,6 +1,6 @@
 package com.jason.employee_creator.employee;
 
-import com.jason.employee_creator.common.exceptions.DuplicateEmailException;
+import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
@@ -39,7 +39,7 @@ public class EmployeeService {
     if (this.repo.existsByEmail(data.getEmail())) {
       log.warn("Create employee failed - duplicate email={}", data.getEmail());
 
-      throw new DuplicateEmailException(data.getEmail());
+      throw new DuplicateFieldException("email", data.getEmail());
     }
 
     Employee createdEmployee = this.mapper.map(data, Employee.class);
@@ -66,7 +66,7 @@ public class EmployeeService {
     Employee existing = findById(id);
     log.info("Before mapping, existing.id={}", existing.getId());
     if (repo.existsByEmailAndIdNot(data.getEmail(), id)) {
-      throw new DuplicateEmailException(data.getEmail());
+      throw new DuplicateFieldException("email", data.getEmail());
     }
     mapper.map(data, existing);
     log.info("After mapping, existing.id={}", existing.getId());

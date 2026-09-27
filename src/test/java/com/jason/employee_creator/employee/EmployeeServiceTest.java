@@ -8,7 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.jason.employee_creator.common.exceptions.DuplicateEmailException;
+import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
@@ -75,12 +75,12 @@ public class EmployeeServiceTest {
   }
 
   @Test
-  public void createEmployee_emailNotUnique_throwsDuplicateEmailException() {
+  public void createEmployee_emailNotUnique_throwsduplicateFieldException() {
     CreateEmployeeRequest data = new CreateEmployeeRequest();
     data.setEmail("testEmail@gmail.com");
 
     when(this.repo.existsByEmail("testEmail@gmail.com")).thenReturn(true);
-    assertThrows(DuplicateEmailException.class, () ->
+    assertThrows(DuplicateFieldException.class, () ->
       this.employeeService.create(data)
     );
     verify(this.repo, never()).saveAndFlush(any(Employee.class));

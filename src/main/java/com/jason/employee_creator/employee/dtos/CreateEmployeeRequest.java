@@ -52,6 +52,10 @@ public class CreateEmployeeRequest {
   @Max(168)
   private Integer hoursPerWeek;
 
+  @NotNull
+  @Min(1)
+  private Long departmentId;
+
   public CreateEmployeeRequest() {}
 
   public String getFirstName() {
@@ -148,5 +152,13 @@ public class CreateEmployeeRequest {
 
   public void setHoursPerWeek(Integer hoursPerWeek) {
     this.hoursPerWeek = hoursPerWeek;
+  }
+
+  public Long getDepartmentId() {
+    return departmentId;
+  }
+
+  public void setDepartmentId(Long departmentId) {
+    this.departmentId = departmentId;
   }
 }

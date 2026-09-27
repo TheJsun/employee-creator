@@ -1,7 +1,7 @@
 package com.jason.employee_creator.common;
 
 import com.jason.employee_creator.common.dtos.ApiErrorResponse;
-import com.jason.employee_creator.common.exceptions.DuplicateEmailException;
+import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(DuplicateEmailException.class)
-  public ResponseEntity<ApiErrorResponse> handleDuplicateEmailException(
-    DuplicateEmailException ex,
+  @ExceptionHandler(DuplicateFieldException.class)
+  public ResponseEntity<ApiErrorResponse> handleduplicateFieldException(
+    DuplicateFieldException ex,
     HttpServletRequest req
   ) {
     log.warn("Duplicate email conflict: {}", ex.getMessage());

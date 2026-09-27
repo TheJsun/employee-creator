@@ -19,7 +19,8 @@ public record EmployeeResponse(
   LocalDate finishDate,
   Boolean onGoing,
   FullTimeOrPartTime fullTimeOrPartTime,
-  Integer hoursPerWeek
+  Integer hoursPerWeek,
+  Long departmentId
 ) {
   public static EmployeeResponse of(Employee employee) {
     return new EmployeeResponse(
@@ -35,7 +36,8 @@ public record EmployeeResponse(
       employee.getFinishDate(),
       employee.getOnGoing(),
       employee.getFullTimeOrPartTime(),
-      employee.getHoursPerWeek()
+      employee.getHoursPerWeek(),
+      employee.getDepartment().getId()
     );
   }
 
