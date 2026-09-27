@@ -2,6 +2,9 @@ package com.jason.employee_creator.employee;
 
 import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
+import com.jason.employee_creator.common.exceptions.UnprocessableContentException;
+import com.jason.employee_creator.department.DepartmentRepository;
+import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import java.util.List;
@@ -15,10 +18,16 @@ public class EmployeeService {
 
   private final EmployeeRepository repo;
   private final ModelMapper mapper;
+  private final DepartmentRepository departmentRepository;
 
-  public EmployeeService(EmployeeRepository repo, ModelMapper mapper) {
+  public EmployeeService(
+    EmployeeRepository repo,
+    ModelMapper mapper,
+    DepartmentRepository departmentRepository
+  ) {
     this.repo = repo;
     this.mapper = mapper;
+    this.departmentRepository = departmentRepository;
   }
 
   public List<Employee> findAll() {
@@ -33,6 +42,17 @@ public class EmployeeService {
       );
   }
 
+  public Department resolveDepartment(Long id) {
+    Department departmentResult = this.departmentRepository
+      .findById(id)
+      .orElseThrow(() ->
+        new UnprocessableContentException(
+          "No department exists with id = " + id
+        )
+      );
+    return departmentResult;
+  }
+
   public Employee create(CreateEmployeeRequest data) {
     log.info("Attempting to create employee with email={}", data.getEmail());
 
@@ -43,6 +63,8 @@ public class EmployeeService {
     }
 
     Employee createdEmployee = this.mapper.map(data, Employee.class);
+    Department foundDepartment = resolveDepartment(data.getDepartmentId());
+    createdEmployee.setDepartment(foundDepartment);
     this.repo.saveAndFlush(createdEmployee);
     log.info(
       "Created employee id={} email={}",
@@ -69,6 +91,10 @@ public class EmployeeService {
       throw new DuplicateFieldException("email", data.getEmail());
     }
     mapper.map(data, existing);
+    if (data.getDepartmentId() != null) {
+      Department foundDepartment = resolveDepartment(data.getDepartmentId());
+      existing.setDepartment(foundDepartment);
+    }
     log.info("After mapping, existing.id={}", existing.getId());
     log.info("Updated employee with id={} with new data", existing.getId());
     return repo.saveAndFlush(existing);

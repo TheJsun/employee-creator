@@ -1,6 +1,7 @@
 package com.jason.employee_creator.employee.entities;
 
 import com.jason.employee_creator.department.entities.Department;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -74,6 +75,7 @@ public class Employee {
   private Integer hoursPerWeek;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @Nullable
   private Department department;
 
   public Long getId() {

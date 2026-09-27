@@ -1,5 +1,6 @@
 package com.jason.employee_creator.employee.dtos;
 
+import com.jason.employee_creator.department.dtos.DepartmentResponse;
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
 import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
@@ -20,9 +21,16 @@ public record EmployeeResponse(
   Boolean onGoing,
   FullTimeOrPartTime fullTimeOrPartTime,
   Integer hoursPerWeek,
-  Long departmentId
+  DepartmentResponse departmentResponse
 ) {
   public static EmployeeResponse of(Employee employee) {
+    DepartmentResponse departmentResponse =
+      employee.getDepartment() != null
+        ? new DepartmentResponse(
+            employee.getDepartment().getId(),
+            employee.getDepartment().getName()
+          )
+        : null;
     return new EmployeeResponse(
       employee.getId(),
       employee.getFirstName(),
@@ -37,7 +45,7 @@ public record EmployeeResponse(
       employee.getOnGoing(),
       employee.getFullTimeOrPartTime(),
       employee.getHoursPerWeek(),
-      employee.getDepartment().getId()
+      departmentResponse
     );
   }
 
