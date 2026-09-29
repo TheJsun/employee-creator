@@ -2,7 +2,6 @@ import type { EmployeeResponse } from "../../schemas/employee-schema";
 import classes from "./EmployeeCard.module.scss";
 import { EmployeeAvatar } from "../EmployeeAvatar/EmployeeAvatar";
 import { MenuDropdown } from "../MenuDropDown/MenuDropDown";
-import { de } from "zod/locales";
 import { useNavigate } from "react-router-dom";
 
 interface EmployeeCardProps {

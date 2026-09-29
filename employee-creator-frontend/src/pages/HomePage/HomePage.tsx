@@ -48,8 +48,6 @@ const HomePage = () => {
     startIndex + pageSize,
   );
 
-  console.log(paginatedEmployees);
-
   return (
     <main className={classes.homepage}>
       <Header

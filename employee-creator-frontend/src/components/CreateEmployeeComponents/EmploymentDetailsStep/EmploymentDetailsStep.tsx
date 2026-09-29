@@ -22,6 +22,16 @@ export default function EmploymentDetailsStep() {
   return (
     <section className={classes.employeeDetails}>
       <h3>Employee Status</h3>
+
+      <label className={classes.label} htmlFor="hoursPerWeek">
+        Hours per week{" "}
+      </label>
+      <input
+        className={`${classes.field} ${errors.hoursPerWeek ? classes["field--invalid"] : ""}`.trim()}
+        id="hoursPerWeek"
+        type="number"
+        {...register("hoursPerWeek", { valueAsNumber: true })}
+      />
       <div className={classes.optionInput}>
         <div className={classes.label}>What is contract type?</div>
         <label>

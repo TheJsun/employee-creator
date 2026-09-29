@@ -21,7 +21,9 @@ export default function EmployeeList({
         <p></p>
       </header>
       {employees.length === 0 && (
-        <h4>No employees registered, add one above.</h4>
+        <h4 className={classes.error}>
+          No employees registered, add one above.
+        </h4>
       )}
       <div className={classes.employeeList}>
         {employees.map((emp) => (

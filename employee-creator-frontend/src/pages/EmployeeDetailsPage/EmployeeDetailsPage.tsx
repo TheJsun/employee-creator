@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEmployee } from "../../hooks/useEmployees";
 import Header from "../../components/Header/Header";
 import classes from "./EmployeeDetailsPage.module.scss";
@@ -9,9 +9,14 @@ import { DetailsSection } from "../../components/DetailsSection/DetailsSection";
 
 export function EmployeeDetailsPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const employeeId = id ? Number(id) : undefined;
   const { data: employee, isLoading, isError } = useEmployee(employeeId!);
   const { handleDelete, handleEdit, isDeleting } = useEmployeeActions();
+
+  const handleDeleteAndRedirect = (employeeId: number) => {
+    handleDelete(employeeId, () => navigate("/"));
+  };
 
   if (isLoading) {
     return <p className={classes.loadingMessage}>Loading employee...</p>;
@@ -27,7 +32,7 @@ export function EmployeeDetailsPage() {
   ];
 
   const employmentFields = [
-    { label: "Employee type", value: employee.fullTimeOrPartTime },
+    { label: "Employee type", value: employee.employmentType },
     { label: "Contract type", value: employee.contractType },
     { label: "Start date", value: employee.startDate },
     {
@@ -53,7 +58,7 @@ export function EmployeeDetailsPage() {
             </div>
             <MenuDropdown
               employee={employee}
-              onDelete={handleDelete}
+              onDelete={handleDeleteAndRedirect}
               onEdit={handleEdit}
             />
           </article>

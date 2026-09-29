@@ -4,9 +4,10 @@ import type {
 } from "../schemas/employee-schema";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
+const EMPLOYEE_BASE_URL = `${BASE_URL}/employees`;
 
 export const getAllEmployees = async () => {
-  const response = await fetch(BASE_URL);
+  const response = await fetch(EMPLOYEE_BASE_URL);
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new Error(
@@ -17,7 +18,7 @@ export const getAllEmployees = async () => {
 };
 
 export const getEmployeeById = async (id: number) => {
-  const response = await fetch(`${BASE_URL}/${id}`);
+  const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`);
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new Error(
@@ -28,7 +29,7 @@ export const getEmployeeById = async (id: number) => {
 };
 
 export const createEmployee = async (data: CreateEmployeeRequest) => {
-  const response = await fetch(BASE_URL, {
+  const response = await fetch(EMPLOYEE_BASE_URL, {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
@@ -43,7 +44,9 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
 };
 
 export const deleteEmployee = async (id: number) => {
-  const response = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+  const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`, {
+    method: "DELETE",
+  });
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new Error(
@@ -56,7 +59,7 @@ export const updateEmployee = async (
   id: number,
   data: CreateEmployeeRequest,
 ) => {
-  const response = await fetch(`${BASE_URL}/${id}`, {
+  const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },

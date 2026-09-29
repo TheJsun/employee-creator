@@ -27,7 +27,11 @@ export function MenuDropdown({
   }, []);
   return (
     <>
-      <div className={classes.menuContainer} ref={menuRef}>
+      <div
+        className={classes.menuContainer}
+        ref={menuRef}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           className={classes.menuTrigger}
           onClick={() => setIsMenuOpen((prev) => !prev)}

@@ -75,7 +75,7 @@ public class Employee {
   private Integer hoursPerWeek;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @Nullable
+  @Nullable //Existing employees don't have department, consider removing later
   private Department department;
 
   public Long getId() {
