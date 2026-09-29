@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.*;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
-import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
+import com.jason.employee_creator.employee.entities.EmploymentType;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
@@ -64,7 +64,7 @@ public class EmployeeEndToEndTest {
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);
     employee1.setOnGoing(true);
-    employee1.setFullTimeOrPartTime(FullTimeOrPartTime.FULL_TIME);
+    employee1.setEmploymentType(EmploymentType.FULL_TIME);
     employee1.setHoursPerWeek(38);
     employeeRepository.saveAndFlush(employee1);
 
@@ -79,7 +79,7 @@ public class EmployeeEndToEndTest {
     employee2.setStartDate(LocalDate.of(2023, 6, 1));
     employee2.setFinishDate(LocalDate.of(2024, 6, 1));
     employee2.setOnGoing(false);
-    employee2.setFullTimeOrPartTime(FullTimeOrPartTime.PART_TIME);
+    employee2.setEmploymentType(EmploymentType.PART_TIME);
     employee2.setHoursPerWeek(20);
     employeeRepository.saveAndFlush(employee2);
 
@@ -107,7 +107,7 @@ public class EmployeeEndToEndTest {
       .body("startDate", hasItems("2024-01-15", "2023-06-01"))
       .body("finishDate", hasItem("2024-06-01"))
       .body("onGoing", hasItems(true, false))
-      .body("fullTimeOrPartTime", hasItems("FULL_TIME", "PART_TIME"))
+      .body("employmentType", hasItems("FULL_TIME", "PART_TIME"))
       .body("hoursPerWeek", hasItems(38, 20))
       .body(matchesJsonSchemaInClasspath("schemas/employee-list-schema.json"));
   }
@@ -126,7 +126,7 @@ public class EmployeeEndToEndTest {
     dto.setStartDate(LocalDate.of(2023, 6, 1));
     dto.setFinishDate(LocalDate.of(2024, 6, 1));
     dto.setOnGoing(false);
-    dto.setFullTimeOrPartTime(FullTimeOrPartTime.PART_TIME);
+    dto.setEmploymentType(EmploymentType.PART_TIME);
     dto.setHoursPerWeek(30);
 
     given()
@@ -148,7 +148,7 @@ public class EmployeeEndToEndTest {
       .body("startDate", equalTo("2023-06-01"))
       .body("finishDate", equalTo("2024-06-01"))
       .body("onGoing", equalTo(false))
-      .body("fullTimeOrPartTime", equalTo("PART_TIME"))
+      .body("employmentType", equalTo("PART_TIME"))
       .body("hoursPerWeek", equalTo(30))
       .body(matchesJsonSchemaInClasspath("schemas/employee-schema.json"));
   }
@@ -168,7 +168,7 @@ public class EmployeeEndToEndTest {
     dto.setStartDate(null);
     dto.setFinishDate(null);
     dto.setOnGoing(null);
-    dto.setFullTimeOrPartTime(null);
+    dto.setEmploymentType(null);
     dto.setHoursPerWeek(-10);
 
     given()
@@ -180,7 +180,7 @@ public class EmployeeEndToEndTest {
       .log()
       .body()
       .statusCode(HttpStatus.BAD_REQUEST.value())
-      .body("details.fullTimeOrPartTime", hasItem("must not be null"))
+      .body("details.employmentType", hasItem("must not be null"))
       .body("details.firstName", hasItem("must not be blank"))
       .body("details.lastName", hasItem("must not be blank"))
       .body("details.phoneNumber", hasItem("must not be blank"))
@@ -210,7 +210,7 @@ public class EmployeeEndToEndTest {
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);
     employee1.setOnGoing(true);
-    employee1.setFullTimeOrPartTime(FullTimeOrPartTime.FULL_TIME);
+    employee1.setEmploymentType(EmploymentType.FULL_TIME);
     employee1.setHoursPerWeek(38);
     employeeRepository.saveAndFlush(employee1);
 
@@ -225,7 +225,7 @@ public class EmployeeEndToEndTest {
     employee2.setStartDate(LocalDate.of(2023, 6, 1));
     employee2.setFinishDate(LocalDate.of(2024, 6, 1));
     employee2.setOnGoing(false);
-    employee2.setFullTimeOrPartTime(FullTimeOrPartTime.PART_TIME);
+    employee2.setEmploymentType(EmploymentType.PART_TIME);
     employee2.setHoursPerWeek(20);
 
     given()
@@ -256,7 +256,7 @@ public class EmployeeEndToEndTest {
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);
     employee1.setOnGoing(true);
-    employee1.setFullTimeOrPartTime(FullTimeOrPartTime.FULL_TIME);
+    employee1.setEmploymentType(EmploymentType.FULL_TIME);
     employee1.setHoursPerWeek(38);
     employeeRepository.saveAndFlush(employee1);
 

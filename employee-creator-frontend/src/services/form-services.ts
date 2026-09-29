@@ -1,16 +1,18 @@
 import type {
-  CreateEmployeeRequest,
+  CreateEmployeeInput,
   EmployeeResponse,
 } from "../schemas/employee-schema";
 
-export function toFormData(employee: EmployeeResponse): CreateEmployeeRequest {
+export function toFormData(employee: EmployeeResponse): CreateEmployeeInput {
   return {
     firstName: employee.firstName,
     lastName: employee.lastName,
-    middleName: employee.middleName ?? undefined,
+    middleName: employee.middleName ?? "",
     email: employee.email,
-    phoneNumber: employee.phoneNumber ?? undefined,
-    address: employee.address ?? undefined,
+    phoneNumber: employee.phoneNumber,
+    address: employee.address,
+    jobRole: employee.jobRole,
+    departmentId: employee.department.id,
     contractType: employee.contractType,
     startDate: employee.startDate,
     finishDate: employee.finishDate ?? undefined,

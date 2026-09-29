@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   CreateEmployeeRequest,
+  type CreateEmployeeInput,
+  type CreateEmployeeOutput,
   type EmployeeResponse,
 } from "../../../schemas/employee-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,20 +17,23 @@ import StepNavigation from "../StepNavigation/StepNavigation";
 import { useNavigate } from "react-router-dom";
 import classes from "./CreateEmployeeForm.module.scss";
 import { toFormData } from "../../../services/form-services";
+import type { DepartmentResponse } from "../../../schemas/department-schema";
 
 interface CreateEmployeeProps {
   mode: "create" | "edit";
   employeeId: number | undefined;
   initialData: EmployeeResponse | undefined;
+  departments: DepartmentResponse[];
 }
 
 export default function CreateEmployeeForm({
   mode,
   employeeId,
   initialData,
+  departments,
 }: CreateEmployeeProps) {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
-  const methods = useForm<CreateEmployeeRequest>({
+  const methods = useForm<CreateEmployeeInput, unknown, CreateEmployeeOutput>({
     resolver: zodResolver(CreateEmployeeRequest),
     defaultValues: initialData ? toFormData(initialData) : undefined,
     mode: "onBlur",
@@ -74,7 +79,9 @@ export default function CreateEmployeeForm({
       >
         <div className={classes.formCard}>
           {currentStep === 1 && <PersonalInfoStep />}
-          {currentStep === 2 && <EmploymentDetailsStep />}
+          {currentStep === 2 && (
+            <EmploymentDetailsStep departments={departments} />
+          )}
 
           <StepNavigation
             currentStep={currentStep}

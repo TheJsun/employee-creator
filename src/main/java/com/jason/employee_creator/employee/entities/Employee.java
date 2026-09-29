@@ -1,7 +1,6 @@
 package com.jason.employee_creator.employee.entities;
 
 import com.jason.employee_creator.department.entities.Department;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -67,7 +66,7 @@ public class Employee {
 
   @NotNull
   @Enumerated(EnumType.STRING)
-  private FullTimeOrPartTime fullTimeOrPartTime;
+  private EmploymentType employmentType;
 
   @NotNull
   @Min(1)
@@ -75,7 +74,6 @@ public class Employee {
   private Integer hoursPerWeek;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @Nullable //Existing employees don't have department, consider removing later
   private Department department;
 
   public Long getId() {
@@ -166,12 +164,12 @@ public class Employee {
     this.onGoing = onGoing;
   }
 
-  public FullTimeOrPartTime getFullTimeOrPartTime() {
-    return fullTimeOrPartTime;
+  public EmploymentType getEmploymentType() {
+    return employmentType;
   }
 
-  public void setFullTimeOrPartTime(FullTimeOrPartTime fullTimeOrPartTime) {
-    this.fullTimeOrPartTime = fullTimeOrPartTime;
+  public void setEmploymentType(EmploymentType employmentType) {
+    this.employmentType = employmentType;
   }
 
   public Integer getHoursPerWeek() {

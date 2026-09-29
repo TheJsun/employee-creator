@@ -3,7 +3,7 @@ package com.jason.employee_creator.employee.dtos;
 import com.jason.employee_creator.department.dtos.DepartmentResponse;
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
-import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
+import com.jason.employee_creator.employee.entities.EmploymentType;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,12 +19,12 @@ public record EmployeeResponse(
   LocalDate startDate,
   LocalDate finishDate,
   Boolean onGoing,
-  FullTimeOrPartTime fullTimeOrPartTime,
+  EmploymentType employmentType,
   Integer hoursPerWeek,
-  DepartmentResponse departmentResponse
+  DepartmentResponse department
 ) {
   public static EmployeeResponse of(Employee employee) {
-    DepartmentResponse departmentResponse =
+    DepartmentResponse department =
       employee.getDepartment() != null
         ? new DepartmentResponse(
             employee.getDepartment().getId(),
@@ -43,9 +43,9 @@ public record EmployeeResponse(
       employee.getStartDate(),
       employee.getFinishDate(),
       employee.getOnGoing(),
-      employee.getFullTimeOrPartTime(),
+      employee.getEmploymentType(),
       employee.getHoursPerWeek(),
-      departmentResponse
+      department
     );
   }
 

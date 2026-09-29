@@ -1,7 +1,7 @@
 package com.jason.employee_creator.employee.dtos;
 
 import com.jason.employee_creator.employee.entities.ContractType;
-import com.jason.employee_creator.employee.entities.FullTimeOrPartTime;
+import com.jason.employee_creator.employee.entities.EmploymentType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -45,7 +45,7 @@ public class CreateEmployeeRequest {
   private Boolean onGoing;
 
   @NotNull
-  private FullTimeOrPartTime fullTimeOrPartTime;
+  private EmploymentType employmentType;
 
   @NotNull
   @Min(1)
@@ -138,12 +138,12 @@ public class CreateEmployeeRequest {
     this.onGoing = onGoing;
   }
 
-  public FullTimeOrPartTime getFullTimeOrPartTime() {
-    return fullTimeOrPartTime;
+  public EmploymentType getEmploymentType() {
+    return employmentType;
   }
 
-  public void setFullTimeOrPartTime(FullTimeOrPartTime fullTimeOrPartTime) {
-    this.fullTimeOrPartTime = fullTimeOrPartTime;
+  public void setEmploymentType(EmploymentType employmentType) {
+    this.employmentType = employmentType;
   }
 
   public Integer getHoursPerWeek() {

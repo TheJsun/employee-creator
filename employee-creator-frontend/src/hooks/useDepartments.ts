@@ -45,7 +45,7 @@ export function useDeleteDepartment() {
   });
 }
 
-export function useUpdateEmployee() {
+export function useUpdateDepartment() {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -23,6 +23,9 @@
     "address": {
       "type": "string"
     },
+    "jobRole": {
+      "type": "string"
+    },
     "contractType": {
       "type": "string"
     },
@@ -33,11 +36,22 @@
     "onGoing": {
       "type": "boolean"
     },
-    "fullTimeOrPartTime": {
+    "employmentType": {
       "type": "string"
     },
     "hoursPerWeek": {
       "type": "number"
+    },
+    "department": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
     }
   },
   "required": [
@@ -48,11 +62,12 @@
     "email",
     "phoneNumber",
     "address",
+    "jobRole",
     "contractType",
     "startDate",
     "finishDate",
     "onGoing",
-    "fullTimeOrPartTime",
+    "employmentType",
     "hoursPerWeek"
   ]
 }

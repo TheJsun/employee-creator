@@ -2,8 +2,15 @@ import { useFormContext } from "react-hook-form";
 import type { CreateEmployeeRequest } from "../../../schemas/employee-schema";
 import { useEffect } from "react";
 import classes from "./EmploymentDetailsStep.module.scss";
+import type { DepartmentResponse } from "../../../schemas/department-schema";
 
-export default function EmploymentDetailsStep() {
+interface EmploymentDetailsStepProps {
+  departments: DepartmentResponse[];
+}
+
+export default function EmploymentDetailsStep({
+  departments,
+}: EmploymentDetailsStepProps) {
   const {
     register,
     watch,
@@ -23,15 +30,33 @@ export default function EmploymentDetailsStep() {
     <section className={classes.employeeDetails}>
       <h3>Employee Status</h3>
 
-      <label className={classes.label} htmlFor="hoursPerWeek">
-        Hours per week{" "}
+      <label className={classes.label} htmlFor="jobRole">
+        Job Title
       </label>
       <input
-        className={`${classes.field} ${errors.hoursPerWeek ? classes["field--invalid"] : ""}`.trim()}
-        id="hoursPerWeek"
-        type="number"
-        {...register("hoursPerWeek", { valueAsNumber: true })}
+        className={`${classes.field} ${errors.jobRole ? classes["field--invalid"] : ""}`.trim()}
+        id="jobRole"
+        {...register("jobRole")}
       />
+      {errors.jobRole && (
+        <p className={classes.error}>{errors.jobRole.message}</p>
+      )}
+      <label className={classes.lable} htmlFor="department">
+        Department
+      </label>
+      <select {...register("departmentId")} required>
+        <option value="" disabled>
+          Select Department
+        </option>
+        {departments.map((d) => (
+          <option key={d.id} value={d.id}>
+            {d.name}
+          </option>
+        ))}
+        {errors.departmentId && (
+          <p className={classes.error}>{errors.departmentId.message}</p>
+        )}
+      </select>
       <div className={classes.optionInput}>
         <div className={classes.label}>What is contract type?</div>
         <label>
