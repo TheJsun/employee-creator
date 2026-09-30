@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEmployee } from "../../hooks/useEmployees";
-import Header from "../../components/Header/Header";
+import EmployeeDetailsHeader from "../../components/Header/EmployeeDetailsHeader";
 import classes from "./EmployeeDetailsPage.module.scss";
 import { EmployeeAvatar } from "../../components/EmployeeAvatar/EmployeeAvatar";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
@@ -47,7 +47,7 @@ export function EmployeeDetailsPage() {
 
   return (
     <main>
-      <Header title="Employee Details" button="Back" />
+      <EmployeeDetailsHeader title="Employee Details" />
       <section className={classes.pageContainer}>
         <section className={classes.detailsContainer}>
           <article className={classes.employeeCard}>

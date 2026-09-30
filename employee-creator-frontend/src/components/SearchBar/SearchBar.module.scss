@@ -1,13 +1,13 @@
 .container {
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid #e7e8ef;
 }
 
 .searchbar {
   width: 100%;
   border: none;
-  height: 2em;
+  height: 4em;
   padding: 1.2em;
-  border-radius: 8px;
+  border-radius: 0;
   font-family: var(--font);
 
   &:focus {

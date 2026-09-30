@@ -1,13 +1,5 @@
 @use "../../scss/mixins/media" as q;
 
-.employeeListContainer {
-  margin-top: 1em;
-  background-color: #ffffff;
-  border: 1px solid #e7e8ef;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
 .employeeListHeader {
   display: grid;
   grid-template-columns: 6fr 4fr 1fr;

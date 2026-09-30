@@ -3,7 +3,7 @@ import EmployeeList from "../../components/EmployeeList/EmployeeList";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
-import Header from "../../components/Header/Header";
+import HomeHeader from "../../components/Header/HomeHeader";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -33,6 +33,7 @@ const HomePage = () => {
   if (isError) {
     return <p>Error: {error.message}</p>;
   }
+  const numEmployees = employees!.length;
 
   const filteredEmployees = employees!.filter((emp) =>
     `${emp.firstName} ${emp.middleName} ${emp.lastName}`
@@ -50,13 +51,14 @@ const HomePage = () => {
 
   return (
     <main className={classes.homepage}>
-      <Header
-        title="Employees"
+      <HomeHeader
+        title="Directory"
         action={
           <Button variant="accent" onClick={() => navigate("/employees/new")}>
             Add Employee
           </Button>
         }
+        numEmployees={numEmployees}
       />
       <section className={classes.content}>
         <div className={classes.contentInner}>

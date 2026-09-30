@@ -19,6 +19,11 @@
 .contentInner {
   width: 100%;
   max-width: 600px;
+  margin: -70px;
+  background-color: #ffffff;
+  border: 1px solid #e7e8ef;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .loadingMessage {

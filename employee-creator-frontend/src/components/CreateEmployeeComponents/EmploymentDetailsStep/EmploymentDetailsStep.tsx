@@ -104,11 +104,10 @@ export default function EmploymentDetailsStep({
         <input type="checkbox" {...register("onGoing")} />
         Ongoing
       </label>
-
+      <div className={classes.label}>
+        Is this on a full-time or part-time basis?
+      </div>
       <div className={classes.optionInput}>
-        <div className={classes.label}>
-          Is this on a full-time or part-time basis?
-        </div>
         <label>
           <input
             type="radio"

@@ -1,5 +1,5 @@
 import CreateEmployeeForm from "../../components/CreateEmployeeComponents/CreateEmployeeForm/CreateEmployeeForm";
-import Header from "../../components/Header/Header";
+import CreateEmployeeHeader from "../../components/Header/CreateEmployeeHeader";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEmployee } from "../../hooks/useEmployees";
 import classes from "./CreateEmployeePage.module.scss";
@@ -46,7 +46,10 @@ const CreateEmployeePage = () => {
 
   return (
     <main>
-      <Header title="Register Form" button="Back" onBack={() => navigate(-1)} />
+      <CreateEmployeeHeader
+        title="Register Form"
+        onBack={() => navigate(-1)}
+      />
 
       {renderBody()}
     </main>
