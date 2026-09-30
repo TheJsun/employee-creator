@@ -52,9 +52,6 @@ public record EmployeeResponse(
   }
 
   public static List<EmployeeResponse> of(List<Employee> employees) {
-    return employees
-      .stream()
-      .map(e -> EmployeeResponse.of(e))
-      .toList();
+    return employees.stream().map(EmployeeResponse::of).toList();
   }
 }

@@ -43,7 +43,7 @@ public class EmployeeService {
       );
   }
 
-  public Department resolveDepartment(Long id) {
+  private Department resolveDepartment(Long id) {
     Department departmentResult = this.departmentRepository
       .findById(id)
       .orElseThrow(() ->

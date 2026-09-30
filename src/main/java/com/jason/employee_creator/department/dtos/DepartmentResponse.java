@@ -9,9 +9,6 @@ public record DepartmentResponse(Long id, String name) {
   }
 
   public static List<DepartmentResponse> of(List<Department> departments) {
-    return departments
-      .stream()
-      .map(d -> DepartmentResponse.of(d))
-      .toList();
+    return departments.stream().map(DepartmentResponse::of).toList();
   }
 }

@@ -21,5 +21,3 @@ export function EmployeeAvatar({ size, employee }: EmployeeAvatarProps) {
     </div>
   );
 }
-
-//className={`${classes.btn} ${classes[variant]} ${className ?? ""}`.trim()}
