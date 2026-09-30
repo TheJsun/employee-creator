@@ -1,6 +1,6 @@
 import Button from "../../components/Button/Button";
 import EmployeeList from "../../components/EmployeeList/EmployeeList";
-import { useDeleteEmployee, useEmployees } from "../../hooks/useEmployees";
+import { useEmployees } from "../../hooks/useEmployees";
 import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
 import Header from "../../components/Header/Header";
@@ -14,14 +14,14 @@ const ROWS_PER_PAGE = 5;
 
 const HomePage = () => {
   const { data: employees, isLoading, isError, error } = useEmployees();
-  const deleteEmployeeMutation = useDeleteEmployee();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const columns = useColumns();
   const pageSize = columns * ROWS_PER_PAGE;
 
-  const { handleDelete, handleEdit, isDeleting } = useEmployeeActions();
+  const { handleDelete, handleEdit, isDeleting, isDeleteError } =
+    useEmployeeActions();
 
   useEffect(() => {
     setCurrentPage(1);
@@ -71,11 +71,15 @@ const HomePage = () => {
             onEdit={handleEdit}
           />
         </div>
-        {deleteEmployeeMutation.isPending && (
-          <p className={classes.loadingMessage}>Deleting employee...</p>
-        )}
       </section>
-      {isDeleting && <p>Deleting employee...</p>}
+      {isDeleting && (
+        <p className={classes.loadingMessage}>Deleting employee...</p>
+      )}
+      {isDeleteError && (
+        <p className={classes.error}>
+          Failed to delete employee. Please try again.
+        </p>
+      )}
       <Pagination
         currentPage={currentPage}
         totalItems={employees!.length}

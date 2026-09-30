@@ -6,6 +6,7 @@ import com.jason.employee_creator.common.exceptions.UnprocessableContentExceptio
 import com.jason.employee_creator.department.DepartmentRepository;
 import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
+import com.jason.employee_creator.employee.dtos.UpdateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -84,10 +85,12 @@ public class EmployeeService {
     log.info("Deleted employee id={}", id);
   }
 
-  public Employee update(Long id, CreateEmployeeRequest data) {
+  public Employee update(Long id, UpdateEmployeeRequest data) {
     Employee existing = findById(id);
-    log.info("Before mapping, existing.id={}", existing.getId());
-    if (repo.existsByEmailAndIdNot(data.getEmail(), id)) {
+    if (
+      data.getEmail() != null &&
+      repo.existsByEmailAndIdNot(data.getEmail(), id)
+    ) {
       throw new DuplicateFieldException("email", data.getEmail());
     }
     mapper.map(data, existing);
@@ -95,7 +98,6 @@ public class EmployeeService {
       Department foundDepartment = resolveDepartment(data.getDepartmentId());
       existing.setDepartment(foundDepartment);
     }
-    log.info("After mapping, existing.id={}", existing.getId());
     log.info("Updated employee with id={} with new data", existing.getId());
     return repo.saveAndFlush(existing);
   }

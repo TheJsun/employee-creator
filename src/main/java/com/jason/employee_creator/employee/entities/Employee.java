@@ -52,6 +52,11 @@ public class Employee {
   @NotBlank
   private String address;
 
+  @NotBlank
+  @Column(nullable = false, length = 50)
+  @Size(max = 50)
+  private String jobRole;
+
   @NotNull
   @Enumerated(EnumType.STRING)
   private ContractType contractType;
@@ -130,6 +135,14 @@ public class Employee {
 
   public void setAddress(String address) {
     this.address = address;
+  }
+
+  public String getJobRole() {
+    return jobRole;
+  }
+
+  public void setJobRole(String jobRole) {
+    this.jobRole = jobRole;
   }
 
   public ContractType getContractType() {

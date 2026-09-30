@@ -29,7 +29,7 @@ export default function EmployeeCard({
         </p>
       </div>
 
-      <p>test</p>
+      <p>{employee.department?.name ?? "—"}</p>
       <MenuDropdown employee={employee} onDelete={onDelete} onEdit={onEdit} />
     </article>
   );

@@ -5,62 +5,54 @@ import com.jason.employee_creator.employee.entities.EmploymentType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
-public class CreateEmployeeRequest {
+public class UpdateEmployeeRequest {
 
-  @NotBlank
+  @Pattern(regexp = ".*\\S.*", message = "First name cannot be empty")
   @Size(max = 50)
   private String firstName;
 
-  @NotBlank
+  @Pattern(regexp = ".*\\S.*", message = "Last name cannot be empty")
   @Size(max = 50)
   private String lastName;
 
   @Size(max = 50)
   private String middleName;
 
-  @NotBlank
   @Email
   private String email;
 
-  @NotBlank
+  @Pattern(regexp = ".*\\S.*", message = "Phone number cannot be empty")
   private String phoneNumber;
 
-  @NotBlank
+  @Pattern(regexp = ".*\\S.*", message = "Address cannot be empty")
   private String address;
 
-  @NotBlank
+  @Pattern(regexp = ".*\\S.*", message = "Job role cannot be empty")
   @Size(max = 50)
   private String jobRole;
 
-  @NotNull
   private ContractType contractType;
 
-  @NotNull
   private LocalDate startDate;
 
   private LocalDate finishDate;
 
-  @NotNull
   private Boolean onGoing;
 
-  @NotNull
   private EmploymentType employmentType;
 
-  @NotNull
   @Min(1)
   @Max(168)
   private Integer hoursPerWeek;
 
-  @NotNull
   @Min(1)
   private Long departmentId;
 
-  public CreateEmployeeRequest() {}
+  public UpdateEmployeeRequest() {}
 
   public String getFirstName() {
     return firstName;

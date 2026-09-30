@@ -4,6 +4,8 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
+import com.jason.employee_creator.department.DepartmentRepository;
+import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
@@ -32,9 +34,18 @@ public class EmployeeEndToEndTest {
   @Autowired
   private EmployeeRepository employeeRepository;
 
+  @Autowired
+  private DepartmentRepository departmentRepository;
+
   @BeforeEach
   public void setup() {
     RestAssured.port = this.port;
+  }
+
+  private Department createDepartment(String name) {
+    Department department = new Department();
+    department.setName(name);
+    return this.departmentRepository.saveAndFlush(department);
   }
 
   //Tests for Getting Employees
@@ -60,6 +71,7 @@ public class EmployeeEndToEndTest {
     employee1.setEmail("jane.doe@example.com");
     employee1.setPhoneNumber("0412345678");
     employee1.setAddress("123 Example Street, Melbourne VIC 3000");
+    employee1.setJobRole("Software Engineer");
     employee1.setContractType(ContractType.PERMANENT);
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);
@@ -75,6 +87,7 @@ public class EmployeeEndToEndTest {
     employee2.setEmail("john.smith@example.com");
     employee2.setPhoneNumber("0498765432");
     employee2.setAddress("456 Sample Ave, Sydney NSW 2000");
+    employee2.setJobRole("Sales Manager");
     employee2.setContractType(ContractType.CONTRACT);
     employee2.setStartDate(LocalDate.of(2023, 6, 1));
     employee2.setFinishDate(LocalDate.of(2024, 6, 1));
@@ -115,6 +128,8 @@ public class EmployeeEndToEndTest {
   //Tests for Creating Employees
   @Test
   public void createEmployee_validDTO_created() {
+    Department department = createDepartment("Engineering");
+
     CreateEmployeeRequest dto = new CreateEmployeeRequest();
     dto.setFirstName("validFirstName");
     dto.setLastName("validLastName");
@@ -122,6 +137,8 @@ public class EmployeeEndToEndTest {
     dto.setEmail("validEmail@gmail.com");
     dto.setPhoneNumber("0412345678");
     dto.setAddress("123 Example Street, Melbourne VIC 3000");
+    dto.setJobRole("Software Engineer");
+    dto.setDepartmentId(department.getId());
     dto.setContractType(ContractType.CONTRACT);
     dto.setStartDate(LocalDate.of(2023, 6, 1));
     dto.setFinishDate(LocalDate.of(2024, 6, 1));
@@ -144,6 +161,8 @@ public class EmployeeEndToEndTest {
       .body("email", equalTo("validEmail@gmail.com"))
       .body("phoneNumber", equalTo("0412345678"))
       .body("address", equalTo("123 Example Street, Melbourne VIC 3000"))
+      .body("jobRole", equalTo("Software Engineer"))
+      .body("department.name", equalTo("Engineering"))
       .body("contractType", equalTo("CONTRACT"))
       .body("startDate", equalTo("2023-06-01"))
       .body("finishDate", equalTo("2024-06-01"))
@@ -164,6 +183,7 @@ public class EmployeeEndToEndTest {
     dto.setEmail("not-an-email");
     dto.setPhoneNumber("");
     dto.setAddress("");
+    dto.setJobRole("");
     dto.setContractType(null);
     dto.setStartDate(null);
     dto.setFinishDate(null);
@@ -189,6 +209,7 @@ public class EmployeeEndToEndTest {
         hasItem("must be greater than or equal to 1")
       )
       .body("details.address", hasItem("must not be blank"))
+      .body("details.jobRole", hasItem("must not be blank"))
       .body("details.contractType", hasItem("must not be null"))
       .body("details.middleName", hasItem("size must be between 0 and 50"))
       .body("details.email", hasItem("must be a well-formed email address"))
@@ -199,6 +220,8 @@ public class EmployeeEndToEndTest {
 
   @Test
   public void createEmployee_duplicateField_returnsConflict() {
+    Department department = createDepartment("Engineering");
+
     Employee employee1 = new Employee();
     employee1.setFirstName("Jane");
     employee1.setLastName("Doe");
@@ -206,6 +229,7 @@ public class EmployeeEndToEndTest {
     employee1.setEmail("jane.doe@example.com");
     employee1.setPhoneNumber("0412345678");
     employee1.setAddress("123 Example Street, Melbourne VIC 3000");
+    employee1.setJobRole("Software Engineer");
     employee1.setContractType(ContractType.PERMANENT);
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);
@@ -221,6 +245,8 @@ public class EmployeeEndToEndTest {
     employee2.setEmail("jane.doe@example.com");
     employee2.setPhoneNumber("0498765432");
     employee2.setAddress("456 Sample Ave, Sydney NSW 2000");
+    employee2.setJobRole("Sales Manager");
+    employee2.setDepartmentId(department.getId());
     employee2.setContractType(ContractType.CONTRACT);
     employee2.setStartDate(LocalDate.of(2023, 6, 1));
     employee2.setFinishDate(LocalDate.of(2024, 6, 1));
@@ -252,6 +278,7 @@ public class EmployeeEndToEndTest {
     employee1.setEmail("jane.doe@example.com");
     employee1.setPhoneNumber("0412345678");
     employee1.setAddress("123 Example Street, Melbourne VIC 3000");
+    employee1.setJobRole("Software Engineer");
     employee1.setContractType(ContractType.PERMANENT);
     employee1.setStartDate(LocalDate.of(2024, 1, 15));
     employee1.setFinishDate(null);

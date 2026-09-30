@@ -17,6 +17,7 @@ export default function SearchBar({
         className={classes.searchbar}
         type="text"
         placeholder={placeholder}
+        aria-label={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

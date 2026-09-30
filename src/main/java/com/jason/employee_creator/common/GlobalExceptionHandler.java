@@ -1,8 +1,10 @@
 package com.jason.employee_creator.common;
 
 import com.jason.employee_creator.common.dtos.ApiErrorResponse;
+import com.jason.employee_creator.common.exceptions.DepartmentInUseException;
 import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
+import com.jason.employee_creator.common.exceptions.UnprocessableContentException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class GlobalExceptionHandler {
     NotFoundException ex,
     HttpServletRequest req
   ) {
-    log.warn("Not found exception", ex.getMessage());
+    log.warn("Not found exception: {}", ex.getMessage());
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.NOT_FOUND,
       ex.getMessage(),
@@ -47,12 +49,40 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.CONFLICT);
   }
 
+  @ExceptionHandler(UnprocessableContentException.class)
+  public ResponseEntity<ApiErrorResponse> handleUnprocessableContentException(
+    UnprocessableContentException ex,
+    HttpServletRequest req
+  ) {
+    log.warn("Unprocessable content exception: {}", ex.getMessage());
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.UNPROCESSABLE_CONTENT,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_CONTENT);
+  }
+
+  @ExceptionHandler(DepartmentInUseException.class)
+  public ResponseEntity<ApiErrorResponse> handleDepartmentInUseException(
+    DepartmentInUseException ex,
+    HttpServletRequest req
+  ) {
+    log.warn("Department in use conflict: {}", ex.getMessage());
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.CONFLICT,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(
     MethodArgumentNotValidException ex,
     HttpServletRequest req
   ) {
-    log.warn("Invalid method argument", ex.getMessage());
+    log.warn("Invalid method argument: {}", ex.getMessage());
     Map<String, ArrayList<String>> errors = new HashMap<>();
 
     for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
@@ -75,9 +105,9 @@ public class GlobalExceptionHandler {
     Exception ex,
     HttpServletRequest req
   ) {
-    log.warn("Unhandled exception", ex.getMessage());
+    log.warn("Unhandled exception: {}", ex.getMessage(), ex);
     ApiErrorResponse response = ApiErrorResponse.of(
-      HttpStatus.UNPROCESSABLE_CONTENT,
+      HttpStatus.INTERNAL_SERVER_ERROR,
       ex.getMessage(),
       req.getRequestURI()
     );

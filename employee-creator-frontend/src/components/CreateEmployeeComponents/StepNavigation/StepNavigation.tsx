@@ -1,8 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import {
-  useCreateEmployee,
-  useUpdateEmployee,
-} from "../../../hooks/useEmployees";
 import Button from "../../Button/Button";
 import classes from "./StepNavigation.module.scss";
 
@@ -11,6 +7,7 @@ interface StepNavigationProps {
   onNext: () => void;
   onBack: () => void;
   mode: "create" | "edit";
+  isPending: boolean;
 }
 
 export default function StepNavigation({
@@ -18,9 +15,8 @@ export default function StepNavigation({
   onNext,
   onBack,
   mode,
+  isPending,
 }: StepNavigationProps) {
-  const createEmployeeMutation = useCreateEmployee();
-  const updateEmployeeMutation = useUpdateEmployee();
   const navigate = useNavigate();
   const handleCancel = () => {
     navigate("/");
@@ -48,20 +44,12 @@ export default function StepNavigation({
             <Button type="button" variant="secondary" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={
-                mode === "edit"
-                  ? updateEmployeeMutation.isPending
-                  : createEmployeeMutation.isPending
-              }
-            >
+            <Button type="submit" variant="primary" disabled={isPending}>
               {mode === "edit"
-                ? updateEmployeeMutation.isPending
+                ? isPending
                   ? "Saving..."
                   : "Save Changes"
-                : createEmployeeMutation.isPending
+                : isPending
                   ? "Creating..."
                   : "Save"}
             </Button>

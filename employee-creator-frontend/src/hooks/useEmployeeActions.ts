@@ -18,5 +18,7 @@ export function useEmployeeActions() {
     handleEdit,
     handleDelete,
     isDeleting: deleteEmployeeMutation.isPending,
+    isDeleteError: deleteEmployeeMutation.isError,
+    deleteError: deleteEmployeeMutation.error,
   };
 }

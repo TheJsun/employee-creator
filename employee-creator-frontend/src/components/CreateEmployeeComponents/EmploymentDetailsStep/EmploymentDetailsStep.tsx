@@ -41,10 +41,10 @@ export default function EmploymentDetailsStep({
       {errors.jobRole && (
         <p className={classes.error}>{errors.jobRole.message}</p>
       )}
-      <label className={classes.lable} htmlFor="department">
+      <label className={classes.label} htmlFor="department">
         Department
       </label>
-      <select {...register("departmentId")} required>
+      <select id="department" {...register("departmentId")} required>
         <option value="" disabled>
           Select Department
         </option>
@@ -53,10 +53,10 @@ export default function EmploymentDetailsStep({
             {d.name}
           </option>
         ))}
-        {errors.departmentId && (
-          <p className={classes.error}>{errors.departmentId.message}</p>
-        )}
       </select>
+      {errors.departmentId && (
+        <p className={classes.error}>{errors.departmentId.message}</p>
+      )}
       <div className={classes.optionInput}>
         <div className={classes.label}>What is contract type?</div>
         <label>

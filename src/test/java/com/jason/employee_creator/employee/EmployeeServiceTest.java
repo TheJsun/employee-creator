@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import com.jason.employee_creator.common.exceptions.DuplicateFieldException;
 import com.jason.employee_creator.common.exceptions.NotFoundException;
+import com.jason.employee_creator.department.DepartmentRepository;
+import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import java.util.List;
@@ -29,6 +31,9 @@ public class EmployeeServiceTest {
 
   @Mock
   private ModelMapper mapper;
+
+  @Mock
+  private DepartmentRepository departmentRepository;
 
   @InjectMocks
   private EmployeeService employeeService;
@@ -90,14 +95,21 @@ public class EmployeeServiceTest {
   public void createEmployee_emailIsUnique_createsEmployee() {
     CreateEmployeeRequest data = new CreateEmployeeRequest();
     data.setEmail("testEmail@gmail.com");
+    data.setDepartmentId(1L);
 
     Employee employee = new Employee();
+    Department department = new Department();
+    department.setId(1L);
 
     when(this.repo.existsByEmail("testEmail@gmail.com")).thenReturn(false);
     when(this.mapper.map(data, Employee.class)).thenReturn(employee);
+    when(this.departmentRepository.findById(1L)).thenReturn(
+      Optional.of(department)
+    );
     Employee result = this.employeeService.create(data);
 
     assertEquals(employee, result);
+    assertEquals(department, result.getDepartment());
     verify(this.repo).saveAndFlush(employee);
   }
 

@@ -25,6 +25,11 @@
   text-align: center;
 }
 
+.error {
+  text-align: center;
+  color: #d33636;
+}
+
 @include q.md {
   .homepage {
     overflow: hidden;

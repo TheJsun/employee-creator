@@ -88,6 +88,7 @@ export default function CreateEmployeeForm({
             onNext={handleNext}
             onBack={handleBack}
             mode={mode}
+            isPending={activeMutation.isPending}
           />
           {activeMutation.isError && (
             <p className={classes.error}>{activeMutation.error.message}</p>

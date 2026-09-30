@@ -12,7 +12,8 @@ export function EmployeeDetailsPage() {
   const navigate = useNavigate();
   const employeeId = id ? Number(id) : undefined;
   const { data: employee, isLoading, isError } = useEmployee(employeeId!);
-  const { handleDelete, handleEdit, isDeleting } = useEmployeeActions();
+  const { handleDelete, handleEdit, isDeleting, isDeleteError } =
+    useEmployeeActions();
 
   const handleDeleteAndRedirect = (employeeId: number) => {
     handleDelete(employeeId, () => navigate("/"));
@@ -32,6 +33,8 @@ export function EmployeeDetailsPage() {
   ];
 
   const employmentFields = [
+    { label: "Job role", value: employee.jobRole },
+    { label: "Department", value: employee.department?.name ?? "—" },
     { label: "Employee type", value: employee.employmentType },
     { label: "Contract type", value: employee.contractType },
     { label: "Start date", value: employee.startDate },
@@ -71,6 +74,11 @@ export function EmployeeDetailsPage() {
       </section>
 
       {isDeleting && <p>Deleting employee...</p>}
+      {isDeleteError && (
+        <p className={classes.errorMessage}>
+          Failed to delete employee. Please try again.
+        </p>
+      )}
     </main>
   );
 }

@@ -2,6 +2,7 @@ package com.jason.employee_creator.employee;
 
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.dtos.EmployeeResponse;
+import com.jason.employee_creator.employee.dtos.UpdateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -60,7 +61,7 @@ public class EmployeeController {
   @PutMapping("/{id}")
   public ResponseEntity<EmployeeResponse> updateEmployee(
     @PathVariable Long id,
-    @RequestBody @Valid CreateEmployeeRequest data
+    @RequestBody @Valid UpdateEmployeeRequest data
   ) {
     Employee updated = employeeService.update(id, data);
     return ResponseEntity.ok(EmployeeResponse.of(updated));
