@@ -3,6 +3,11 @@ import classes from "./EmployeeCard.module.scss";
 import { EmployeeAvatar } from "../EmployeeAvatar/EmployeeAvatar";
 import { MenuDropdown } from "../MenuDropDown/MenuDropDown";
 import { useNavigate } from "react-router-dom";
+import {
+  formatContractType,
+  formatEmploymentType,
+  formatStartDate,
+} from "../../services/employee-profile";
 
 interface EmployeeCardProps {
   employee: EmployeeResponse;
@@ -24,12 +29,23 @@ export default function EmployeeCard({
     >
       <div className={classes.employeeIdentity}>
         <EmployeeAvatar size="sm" employee={employee} />
-        <p className={classes.employeeIdentity__name}>
-          {employee.firstName} {employee?.middleName} {employee.lastName}
-        </p>
+        <div className={classes.employeeIdentity__text}>
+          <p className={classes.employeeIdentity__name}>
+            {employee.firstName} {employee?.middleName} {employee.lastName}
+          </p>
+          <p className={classes.employeeIdentity__role}>{employee.jobRole}</p>
+        </div>
       </div>
 
-      <p>{employee.department?.name ?? "—"}</p>
+      <p className={classes.department}>{employee.department?.name ?? "—"}</p>
+      <p className={classes.type}>
+        <span className={classes.typeDot} aria-hidden="true" />
+        {formatEmploymentType(employee.employmentType)}
+      </p>
+      <p className={classes.contract}>
+        {formatContractType(employee.contractType)}
+      </p>
+      <p className={classes.started}>{formatStartDate(employee.startDate)}</p>
       <MenuDropdown employee={employee} onDelete={onDelete} onEdit={onEdit} />
     </article>
   );

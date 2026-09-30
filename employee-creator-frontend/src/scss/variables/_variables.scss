@@ -6,4 +6,8 @@
   --text-white: white;
 
   --font: "inter", sans-serif;
+
+  // Shared width cap so the homepage header content and the employee list
+  // below it grow together and stop expanding at the same point.
+  --content-max-width: clamp(600px, 90vw, 1050px);
 }

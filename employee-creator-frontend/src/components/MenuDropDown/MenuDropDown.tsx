@@ -6,12 +6,14 @@ interface MenuDropDownProps {
   employee: EmployeeResponse;
   onDelete: (id: number) => void;
   onEdit: (employee: EmployeeResponse) => void;
+  variant?: "light" | "dark";
 }
 
 export function MenuDropdown({
   employee,
   onDelete,
   onEdit,
+  variant = "light",
 }: MenuDropDownProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -33,7 +35,7 @@ export function MenuDropdown({
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className={classes.menuTrigger}
+          className={`${classes.menuTrigger} ${variant === "dark" ? classes.menuTriggerDark : ""}`.trim()}
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Employee actions"
           aria-expanded={isMenuOpen}

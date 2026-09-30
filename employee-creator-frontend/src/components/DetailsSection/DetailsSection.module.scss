@@ -1,31 +1,33 @@
 .detailsSection {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
-  padding: 1rem;
-  background-color: #ffffff;
-  border: 1px solid #eaeaea;
-  border-radius: 12px;
 
   &__header {
     font-weight: 600;
     font-size: 18px;
-    padding-bottom: 1em;
-    border-bottom: 1px solid grey;
+    margin: 0 0 0.5rem;
   }
 }
 
 .details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  flex-wrap: wrap;
-  gap: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
 }
 
 .detailsField {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  column-gap: 1em;
+
   &__label {
     color: grey;
     font-size: 14px;
+  }
+
+  &__data {
+    margin: 0;
   }
 }

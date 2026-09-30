@@ -2,10 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEmployee } from "../../hooks/useEmployees";
 import EmployeeDetailsHeader from "../../components/Header/EmployeeDetailsHeader";
 import classes from "./EmployeeDetailsPage.module.scss";
-import { EmployeeAvatar } from "../../components/EmployeeAvatar/EmployeeAvatar";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
-import { MenuDropdown } from "../../components/MenuDropDown/MenuDropDown";
 import { DetailsSection } from "../../components/DetailsSection/DetailsSection";
+import { Tabs } from "../../components/Tabs/Tabs";
+import {
+  formatContractType,
+  formatEmploymentType,
+  formatStartDate,
+} from "../../services/employee-profile";
 
 export function EmployeeDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,49 +31,44 @@ export function EmployeeDetailsPage() {
   }
 
   const contactFields = [
-    { label: "Email address", value: employee.email },
-    { label: "Mobile number", value: employee.phoneNumber },
-    { label: "Residential address", value: employee.address },
+    { label: "Work email", value: employee.email },
+    { label: "Mobile", value: employee.phoneNumber },
+    { label: "Address", value: employee.address },
   ];
 
+  const term = employee.onGoing
+    ? `${formatStartDate(employee.startDate)} – Ongoing`
+    : employee.finishDate
+      ? `${formatStartDate(employee.startDate)} – ${formatStartDate(employee.finishDate)}`
+      : formatStartDate(employee.startDate);
+
   const employmentFields = [
-    { label: "Job role", value: employee.jobRole },
-    { label: "Department", value: employee.department?.name ?? "—" },
-    { label: "Employee type", value: employee.employmentType },
-    { label: "Contract type", value: employee.contractType },
-    { label: "Start date", value: employee.startDate },
     {
-      label: "Finish date",
-      value: employee.onGoing ? "On-going" : employee.finishDate,
+      label: "Type",
+      value: `${formatEmploymentType(employee.employmentType)} · ${employee.hoursPerWeek} hours per week`,
     },
-    { label: "Hours per week", value: employee.hoursPerWeek },
+    { label: "Contract", value: formatContractType(employee.contractType) },
+    { label: "Term", value: term },
   ];
 
   return (
     <main>
-      <EmployeeDetailsHeader title="Employee Details" />
+      <EmployeeDetailsHeader
+        employee={employee}
+        onEdit={handleEdit}
+        onDelete={handleDeleteAndRedirect}
+      />
       <section className={classes.pageContainer}>
         <section className={classes.detailsContainer}>
-          <article className={classes.employeeCard}>
-            <EmployeeAvatar size="md" employee={employee} />
-            <div className={classes.employeeCard__text}>
-              <h1 className={classes.employeeCard__name}>
-                {employee?.firstName} {employee?.middleName}{" "}
-                {employee?.lastName}
-              </h1>
-              <p className={classes.employeeCard__subtext}>Employee Profile</p>
-            </div>
-            <MenuDropdown
-              employee={employee}
-              onDelete={handleDeleteAndRedirect}
-              onEdit={handleEdit}
-            />
-          </article>
-          <DetailsSection title="Contact Details" fields={contactFields} />
-          <DetailsSection
-            title="Employment Details"
-            fields={employmentFields}
+          <Tabs
+            tabs={[
+              { id: "details", label: "Details" },
+              { id: "documents", label: "Documents", disabled: true },
+            ]}
+            activeTabId="details"
           />
+          <DetailsSection title="Contact" fields={contactFields} />
+          <DetailsSection title="Employment" fields={employmentFields} />
         </section>
       </section>
 

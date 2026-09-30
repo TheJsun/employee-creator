@@ -1,14 +1,38 @@
 @use "../../scss/mixins/media" as q;
+@use "../../scss/mixins/responsive-column" as col;
+
+.employeeListContainer {
+  // Drives grid-template-columns on both .employeeListHeader below and
+  // .employeeCard in EmployeeCard.module.scss — keep the two in sync.
+  --employee-grid-columns: 6fr 4fr 32px;
+
+  @include q.md {
+    --employee-grid-columns: 5fr 3fr 2fr 32px;
+  }
+
+  @include q.lg {
+    --employee-grid-columns: 4fr 2fr 2fr 2fr 2fr 32px;
+  }
+}
 
 .employeeListHeader {
   display: grid;
-  grid-template-columns: 6fr 4fr 1fr;
+  grid-template-columns: var(--employee-grid-columns, 6fr 4fr 32px);
   padding: 1em 1.5em;
   border-bottom: 1px solid #e7e8ef;
   color: grey;
   font-weight: 500;
   font-size: 12px;
   justify-content: start;
+}
+
+.type {
+  @include col.column-from-md(block);
+}
+
+.contract,
+.started {
+  @include col.column-from-lg(block);
 }
 
 .employeeList {

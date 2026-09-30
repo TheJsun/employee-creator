@@ -1,0 +1,19 @@
+@use "media" as q;
+
+// Hides an element by default, revealing it from the given breakpoint up.
+// EmployeeList.module.scss (header cells) and EmployeeCard.module.scss (row
+// cells) both call this with matching arguments to avoid breakpoints
+// drifting out of sync between the two files.
+@mixin column-from-md($display: block) {
+  display: none;
+  @include q.md {
+    display: $display;
+  }
+}
+
+@mixin column-from-lg($display: block) {
+  display: none;
+  @include q.lg {
+    display: $display;
+  }
+}

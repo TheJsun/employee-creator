@@ -1,5 +1,26 @@
+import type {
+  ContractType,
+  EmploymentType,
+} from "../schemas/employee-schema";
+
 export function getInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+}
+
+export function formatEmploymentType(type: EmploymentType): string {
+  return type === "FULL_TIME" ? "Full-time" : "Part-time";
+}
+
+export function formatContractType(type: ContractType): string {
+  return type === "PERMANENT" ? "Permanent" : "Contract";
+}
+
+export function formatStartDate(isoDate: string): string {
+  return new Date(isoDate).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 const AVATAR_COLORS = [

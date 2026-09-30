@@ -1,11 +1,12 @@
 @use "../../scss/mixins/media" as q;
+@use "../../scss/mixins/responsive-column" as col;
 
 p {
   margin: 0;
 }
 .employeeCard {
   display: grid;
-  grid-template-columns: 6fr 4fr 1fr;
+  grid-template-columns: var(--employee-grid-columns, 6fr 4fr 32px);
   width: 100%;
   align-items: center;
   padding: 1em 1.5em;
@@ -21,4 +22,48 @@ p {
   flex-direction: row;
   align-items: center;
   gap: 0.8em;
+  min-width: 0;
+}
+
+.employeeIdentity__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  min-width: 0;
+}
+
+.employeeIdentity__name,
+.employeeIdentity__role,
+.department {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.employeeIdentity__role {
+  color: grey;
+  font-size: 0.8em;
+}
+
+.department {
+  min-width: 0;
+}
+
+.type {
+  @include col.column-from-md(flex);
+  align-items: center;
+  gap: 0.4em;
+}
+
+.typeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #a38fcb;
+  flex-shrink: 0;
+}
+
+.contract,
+.started {
+  @include col.column-from-lg(block);
 }

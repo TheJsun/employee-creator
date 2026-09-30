@@ -8,7 +8,7 @@ interface DetailsSectionProps {
 export function DetailsSection({ title, fields }: DetailsSectionProps) {
   return (
     <article className={classes.detailsSection}>
-      <h1 className={classes.detailsSection__header}>{title}</h1>
+      <h2 className={classes.detailsSection__header}>{title}</h2>
       <div className={classes.details}>
         {fields.map(({ label, value }) => (
           <div className={classes.detailsField} key={label}>

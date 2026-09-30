@@ -1,0 +1,27 @@
+.tabs {
+  display: flex;
+  gap: 1.5em;
+  border-bottom: 1px solid #e7e8ef;
+  margin-bottom: 1.5em;
+}
+
+.tab {
+  padding: 0 0 0.6em;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: grey;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:disabled {
+    color: #c7c7c7;
+    cursor: not-allowed;
+  }
+}
+
+.active {
+  color: #1a1a1a;
+  font-weight: 600;
+  border-bottom-color: #1a1a1a;
+}

@@ -18,6 +18,9 @@ export default function EmployeeList({
       <header className={classes.employeeListHeader}>
         <p>Name</p>
         <p>Department</p>
+        <p className={classes.type}>Type</p>
+        <p className={classes.contract}>Contract</p>
+        <p className={classes.started}>Started</p>
         <p></p>
       </header>
       {employees.length === 0 && (

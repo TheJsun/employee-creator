@@ -13,11 +13,13 @@ export default function HomeHeader({
 }: HomeHeaderProps) {
   return (
     <header className={classes.header}>
-      <div className={classes.left}>
-        <h1 className={classes.header__title}>{title}</h1>
-        <p className={classes.employeeCount}>{numEmployees} employees</p>
+      <div className={classes.headerContent}>
+        <div className={classes.left}>
+          <h1 className={classes.header__title}>{title}</h1>
+          <p className={classes.employeeCount}>{numEmployees} employees</p>
+        </div>
+        <div className={classes.action}>{action}</div>
       </div>
-      <div className={classes.action}>{action}</div>
     </header>
   );
 }

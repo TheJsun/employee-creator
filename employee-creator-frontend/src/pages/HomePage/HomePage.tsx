@@ -63,7 +63,7 @@ const HomePage = () => {
       <section className={classes.content}>
         <div className={classes.contentInner}>
           <SearchBar
-            placeholder="Search for employee..."
+            placeholder="Search name, role or email"
             value={searchTerm}
             onChange={setSearchTerm}
           />
