@@ -41,6 +41,14 @@
   flex-direction: column;
 }
 
-.error {
+.errorMessage,
+.emptyListMessage,
+.loadingMessage {
   text-align: center;
+  margin-top: 2em;
+  height: 5vh;
+}
+
+.errorMessage {
+  color: red;
 }

@@ -13,7 +13,7 @@ import { useEmployeeActions } from "../../hooks/useEmployeeActions";
 const ROWS_PER_PAGE = 5;
 
 const HomePage = () => {
-  const { data: employees, isLoading, isError, error } = useEmployees();
+  const { data: employees = [], isLoading, isError, error } = useEmployees();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,15 +27,7 @@ const HomePage = () => {
     setCurrentPage(1);
   }, [columns, searchTerm]);
 
-  if (isLoading) {
-    return <p className={classes.loadingMessage}>Loading...</p>;
-  }
-  if (isError) {
-    return <p>Error: {error.message}</p>;
-  }
-  const numEmployees = employees!.length;
-
-  const filteredEmployees = employees!.filter((emp) =>
+  const filteredEmployees = employees.filter((emp) =>
     `${emp.firstName} ${emp.middleName} ${emp.lastName}`
       .toLowerCase()
       .replaceAll("  ", " ")
@@ -58,7 +50,8 @@ const HomePage = () => {
             Add Employee
           </Button>
         }
-        numEmployees={numEmployees}
+        numEmployees={employees.length}
+        isLoading={isLoading}
       />
       <section className={classes.content}>
         <div className={classes.contentInner}>
@@ -71,6 +64,9 @@ const HomePage = () => {
             employees={paginatedEmployees}
             onDelete={handleDelete}
             onEdit={handleEdit}
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
           />
         </div>
       </section>
@@ -84,7 +80,7 @@ const HomePage = () => {
       )}
       <Pagination
         currentPage={currentPage}
-        totalItems={employees!.length}
+        totalItems={employees.length}
         pageSize={pageSize}
         onPageChange={setCurrentPage}
       />

@@ -55,14 +55,6 @@ p {
   gap: 0.4em;
 }
 
-.typeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #a38fcb;
-  flex-shrink: 0;
-}
-
 .contract,
 .started {
   @include col.column-from-lg(block);

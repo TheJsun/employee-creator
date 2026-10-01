@@ -39,7 +39,6 @@ export default function EmployeeCard({
 
       <p className={classes.department}>{employee.department?.name ?? "—"}</p>
       <p className={classes.type}>
-        <span className={classes.typeDot} aria-hidden="true" />
         {formatEmploymentType(employee.employmentType)}
       </p>
       <p className={classes.contract}>

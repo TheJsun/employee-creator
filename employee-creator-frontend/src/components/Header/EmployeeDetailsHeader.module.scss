@@ -1,4 +1,5 @@
 @use "../../scss/variables/variables";
+@use "../../scss/mixins/media" as q;
 
 .header {
   display: flex;
@@ -32,9 +33,15 @@
 
 .row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 1em;
+
+  @include q.md {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .identity {
@@ -64,4 +71,31 @@
   display: flex;
   align-items: center;
   gap: 0.75em;
+  width: 100%;
+
+  @include q.md {
+    width: auto;
+  }
+}
+
+.actionButton {
+  flex: 1;
+  width: auto;
+  text-align: center;
+
+  @include q.md {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+.emailBtn {
+  background-color: transparent;
+  color: var(--text-white);
+  border-color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }

@@ -3,10 +3,11 @@ import classes from "./MenuDropDown.module.scss";
 import type { EmployeeResponse } from "../../schemas/employee-schema";
 
 interface MenuDropDownProps {
-  employee: EmployeeResponse;
+  employee?: EmployeeResponse;
   onDelete: (id: number) => void;
   onEdit: (employee: EmployeeResponse) => void;
   variant?: "light" | "dark";
+  disabled?: boolean;
 }
 
 export function MenuDropdown({
@@ -14,6 +15,7 @@ export function MenuDropdown({
   onDelete,
   onEdit,
   variant = "light",
+  disabled = false,
 }: MenuDropDownProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -39,11 +41,12 @@ export function MenuDropdown({
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Employee actions"
           aria-expanded={isMenuOpen}
+          disabled={disabled || !employee}
         >
           ⋮
         </button>
 
-        {isMenuOpen && (
+        {isMenuOpen && employee && (
           <div className={classes.menuDropdown}>
             <button
               className={classes.menuItem}
