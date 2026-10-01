@@ -14,9 +14,14 @@
 }
 
 .details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85em;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  row-gap: 0.85em;
+
+  @include q.sm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .detailsField {
@@ -25,7 +30,7 @@
   row-gap: 0.25em;
 
   @include q.md {
-    grid-template-columns: 160px 1fr;
+    grid-template-columns: 80px 1fr;
     column-gap: 1em;
     row-gap: 0;
   }

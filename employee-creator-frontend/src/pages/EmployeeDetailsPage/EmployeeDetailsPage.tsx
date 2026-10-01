@@ -30,9 +30,12 @@ export function EmployeeDetailsPage() {
   ];
 
   const employmentPlaceholderFields = [
+    { label: "Job Title", value: "" },
+    { label: "Department", value: "" },
     { label: "Type", value: "" },
     { label: "Contract", value: "" },
     { label: "Term", value: "" },
+    { label: "Hours per week", value: "" },
   ];
 
   const renderBody = () => {
@@ -80,11 +83,23 @@ export function EmployeeDetailsPage() {
 
     const employmentFields = [
       {
+        label: "Job Title",
+        value: employee.jobRole === "" ? "Unspecified" : employee.jobRole,
+      },
+      {
+        label: "Department",
+        value: employee.department.name,
+      },
+      {
         label: "Type",
-        value: `${formatEmploymentType(employee.employmentType)} · ${employee.hoursPerWeek} hours per week`,
+        value: `${formatEmploymentType(employee.employmentType)}`,
       },
       { label: "Contract", value: formatContractType(employee.contractType) },
       { label: "Term", value: term },
+      {
+        label: "Hours per week",
+        value: `${employee.hoursPerWeek} hours per week`,
+      },
     ];
 
     return (
