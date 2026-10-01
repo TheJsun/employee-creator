@@ -44,7 +44,12 @@ export default function EmploymentDetailsStep({
       <label className={classes.label} htmlFor="department">
         Department
       </label>
-      <select id="department" {...register("departmentId")} required>
+      <select
+        className={classes.field}
+        id="department"
+        {...register("departmentId")}
+        required
+      >
         <option value="" disabled>
           Select Department
         </option>
