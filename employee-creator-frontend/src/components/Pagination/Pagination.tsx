@@ -17,8 +17,6 @@ export default function Pagination({
   containerRef,
 }: PaginationProps) {
   const safePageSize = Number.isFinite(pageSize) && pageSize > 0 ? pageSize : 1;
-  // Always at least one page, so an empty list reads "Page 1 of 1" and the bar
-  // keeps its place in the layout instead of collapsing.
   const totalPages = Math.max(1, Math.ceil(totalItems / safePageSize));
   const page = Math.min(Math.max(currentPage, 1), totalPages);
 

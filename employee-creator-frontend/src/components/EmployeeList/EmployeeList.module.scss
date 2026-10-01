@@ -3,10 +3,6 @@
 
 .employeeListContainer {
   --employee-grid-columns: 6fr 4fr 32px;
-
-  // Rows are a fixed height so the page size can be computed from the
-  // available viewport height (see useFitRows). Keep in sync with the
-  // sm avatar (2.5em) + .employeeCard padding (1em x2) + 1px border.
   --employee-row-height: 73px;
 
   @include q.md {
@@ -24,7 +20,7 @@
   padding: 1em 1.5em;
   border-bottom: 1px solid #e7e8ef;
   color: grey;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 12px;
   justify-content: start;
 }

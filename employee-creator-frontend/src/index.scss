@@ -9,8 +9,6 @@
 body {
   margin: 0;
   font-family: var(--font);
-  // Set here rather than on a wrapper: only html/body backgrounds propagate to
-  // the viewport canvas, so this covers the full scroll height on every route.
   background-color: var(--bg-page);
 }
 

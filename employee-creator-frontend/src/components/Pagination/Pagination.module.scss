@@ -6,9 +6,6 @@
   justify-content: center;
   gap: 1.5em;
   padding: 1rem 0;
-  // Always rendered now, so this is the permanent bottom band: never squashed
-  // by .content's flex: 1, and tall enough for the buttons on short viewports
-  // (10vh left only ~12px of content box at 600px tall).
   flex: none;
   min-height: 4rem;
 }
