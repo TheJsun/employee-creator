@@ -1,0 +1,42 @@
+@use "../../scss/mixins/dropdown" as dd;
+
+.container {
+  position: relative;
+  flex: none;
+}
+
+.trigger {
+  @include dd.trigger-base;
+  padding: 0.5em 0.4em;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.triggerLabel {
+  color: #6b6b6b;
+}
+
+.triggerValue {
+  font-weight: 600;
+}
+
+.chevron {
+  @include dd.chevron;
+}
+
+.panel {
+  @include dd.panel;
+}
+
+.option {
+  @include dd.option;
+}
+
+.optionSelected {
+  @include dd.option-selected;
+}

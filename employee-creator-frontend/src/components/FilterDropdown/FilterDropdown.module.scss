@@ -1,19 +1,16 @@
+@use "../../scss/mixins/dropdown" as dd;
+
 .container {
   position: relative;
   flex: none;
 }
 
 .trigger {
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
+  @include dd.trigger-base;
   padding: 0.5em 0.9em 0.5em 1em;
   border: 1px solid #d5d5d5;
   border-radius: 999px;
   background-color: #ffffff;
-  font-size: 0.9rem;
-  color: #1a1a1a;
-  white-space: nowrap;
 
   &:hover:not(:disabled) {
     background-color: #f5f5f5;
@@ -26,45 +23,21 @@
 }
 
 .chevron {
-  width: 14px;
-  height: 14px;
-  flex: none;
+  @include dd.chevron;
 }
 
 .panel {
-  position: fixed;
-  padding: 0.25rem;
-  background: #ffffff;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  overflow-y: auto;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  z-index: 100;
+  @include dd.panel;
 }
 
 .option {
-  display: flex;
-  align-items: center;
+  @include dd.option;
   justify-content: space-between;
   gap: 1.5rem;
-  width: 100%;
-  padding: 0.5rem 0.65rem;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  font-size: 0.85rem;
-  color: #1a1a1a;
-  text-align: left;
-  white-space: nowrap;
-
-  &:hover {
-    background-color: #f7f7f7;
-  }
 }
 
 .optionSelected {
-  background-color: #f2f2f2;
-  font-weight: 600;
+  @include dd.option-selected;
 }
 
 .optionCount {

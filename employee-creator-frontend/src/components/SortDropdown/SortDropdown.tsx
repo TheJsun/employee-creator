@@ -1,31 +1,24 @@
 import { useDropdownPanel } from "../../hooks/useDropdownPanel";
-import classes from "./FilterDropdown.module.scss";
+import classes from "./SortDropdown.module.scss";
 
-export interface FilterOption {
+export interface SortOption {
   value: string;
   label: string;
-  count: number;
 }
 
-interface FilterDropdownProps {
-  label: string;
-  allLabel: string;
-  allCount: number;
-  options: FilterOption[];
+interface SortDropdownProps {
+  label?: string;
+  options: SortOption[];
   value: string;
   onChange: (value: string) => void;
-  disabled?: boolean;
 }
 
-export default function FilterDropdown({
-  label,
-  allLabel,
-  allCount,
+export default function SortDropdown({
+  label = "Sort by",
   options,
   value,
   onChange,
-  disabled = false,
-}: FilterDropdownProps) {
+}: SortDropdownProps) {
   const {
     isOpen,
     setIsOpen,
@@ -33,14 +26,9 @@ export default function FilterDropdown({
     triggerRef,
     panelRef,
     panelStyle,
-  } = useDropdownPanel();
+  } = useDropdownPanel({ align: "right" });
 
   const selected = options.find((option) => option.value === value);
-
-  const rows: FilterOption[] = [
-    { value: "", label: allLabel, count: allCount },
-    ...options,
-  ];
 
   return (
     <div className={classes.container} ref={containerRef}>
@@ -51,10 +39,10 @@ export default function FilterDropdown({
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-label={selected ? `${label}: ${selected.label}` : label}
-        disabled={disabled}
+        aria-label={`${label}: ${selected?.label ?? ""}`}
       >
-        {selected ? selected.label : label}
+        <span className={classes.triggerLabel}>{label}</span>
+        <span className={classes.triggerValue}>{selected?.label}</span>
         <svg
           className={classes.chevron}
           aria-hidden="true"
@@ -77,9 +65,9 @@ export default function FilterDropdown({
           role="listbox"
           aria-label={label}
         >
-          {rows.map((option) => (
+          {options.map((option) => (
             <button
-              key={option.value === "" ? "__all" : option.value}
+              key={option.value}
               type="button"
               role="option"
               aria-selected={option.value === value}
@@ -93,8 +81,7 @@ export default function FilterDropdown({
                 setIsOpen(false);
               }}
             >
-              <span>{option.label}</span>
-              <span className={classes.optionCount}>{option.count}</span>
+              {option.label}
             </button>
           ))}
         </div>

@@ -15,6 +15,7 @@ import {
 } from "../../services/employee-profile";
 import { useDepartments } from "../../hooks/useDepartments";
 import FilterDropdown from "../../components/FilterDropdown/FilterDropdown";
+import SortDropdown from "../../components/SortDropdown/SortDropdown";
 import {
   applyFilters,
   hasActiveFilters,
@@ -24,6 +25,14 @@ import {
 
 const EMPLOYMENT_TYPES = ["FULL_TIME", "PART_TIME"] as const;
 const CONTRACT_TYPES = ["PERMANENT", "CONTRACT"] as const;
+
+const SORT_OPTIONS = [
+  { value: "dateAdded", label: "Date Added" },
+  { value: "name", label: "Name" },
+  { value: "department", label: "Department" },
+  { value: "contractType", label: "Contract type" },
+  { value: "employmentType", label: "Employment type" },
+];
 
 const HomePage = () => {
   const { data: employees = [], isLoading, isError, error } = useEmployees();
@@ -36,7 +45,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<EmployeeFilters>(EMPTY_FILTERS);
-  const [sortBy, setSortBy] = useState("date_added");
+  const [sortBy, setSortBy] = useState("dateAdded");
 
   const listBodyRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
@@ -81,7 +90,7 @@ const HomePage = () => {
   const sortedEmployees = [...filteredEmployees].sort((a, b) => {
     switch (sortBy) {
       case "dateAdded":
-        return 0;
+        return b.id - a.id;
 
       case "name":
         return `${a.firstName} ${a.lastName}`.localeCompare(
@@ -130,54 +139,54 @@ const HomePage = () => {
             value={filters.search}
             onChange={(value) => updateFilters({ search: value })}
           />
-          <div className={classes.filters}>
-            <button
-              type="button"
-              className={
-                isFiltered
-                  ? classes.allButton
-                  : `${classes.allButton} ${classes.allButtonActive}`
-              }
-              onClick={() => updateFilters(EMPTY_FILTERS)}
-              disabled={!isFiltered}
-              aria-label="Clear all filters"
-            >
-              All
-            </button>
-            <span className={classes.divider} aria-hidden="true" />
-            <FilterDropdown
-              label="Department"
-              allLabel="All departments"
-              allCount={countWith({ department: "" })}
-              options={departmentOptions}
-              value={filters.department}
-              onChange={(value) => updateFilters({ department: value })}
-              disabled={isDepartmentsLoading || isDepartmentsError}
-            />
-            <FilterDropdown
-              label="Employment"
-              allLabel="All employments"
-              allCount={countWith({ employmentType: "" })}
-              options={employmentOptions}
-              value={filters.employmentType}
-              onChange={(value) => updateFilters({ employmentType: value })}
-            />
-            <FilterDropdown
-              label="Contract"
-              allLabel="All contracts"
-              allCount={countWith({ contractType: "" })}
-              options={contractOptions}
-              value={filters.contractType}
-              onChange={(value) => updateFilters({ contractType: value })}
-            />
+          <div className={classes.toolbar}>
+            <div className={classes.filters}>
+              <button
+                type="button"
+                className={
+                  isFiltered
+                    ? classes.allButton
+                    : `${classes.allButton} ${classes.allButtonActive}`
+                }
+                onClick={() => updateFilters(EMPTY_FILTERS)}
+                disabled={!isFiltered}
+                aria-label="Clear all filters"
+              >
+                All
+              </button>
+              <span className={classes.divider} aria-hidden="true" />
+              <FilterDropdown
+                label="Department"
+                allLabel="All departments"
+                allCount={countWith({ department: "" })}
+                options={departmentOptions}
+                value={filters.department}
+                onChange={(value) => updateFilters({ department: value })}
+                disabled={isDepartmentsLoading || isDepartmentsError}
+              />
+              <FilterDropdown
+                label="Employment"
+                allLabel="All employments"
+                allCount={countWith({ employmentType: "" })}
+                options={employmentOptions}
+                value={filters.employmentType}
+                onChange={(value) => updateFilters({ employmentType: value })}
+              />
+              <FilterDropdown
+                label="Contract"
+                allLabel="All contracts"
+                allCount={countWith({ contractType: "" })}
+                options={contractOptions}
+                value={filters.contractType}
+                onChange={(value) => updateFilters({ contractType: value })}
+              />
+            </div>
 
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="dateAdded">Dated Added</option>
-              <option value="name">Name</option>
-              <option value="department">Department</option>
-              <option value="contractType">Contract type</option>
-              <option value="employmentType">Employment type</option>
-            </select>
+            <SortDropdown
+              options={SORT_OPTIONS}
+              value={sortBy}
+              onChange={setSortBy}
+            />
           </div>
 
           <EmployeeList
