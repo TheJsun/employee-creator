@@ -2,9 +2,12 @@
 @use "../../scss/mixins/responsive-column" as col;
 
 .employeeListContainer {
-  // Drives grid-template-columns on both .employeeListHeader below and
-  // .employeeCard in EmployeeCard.module.scss — keep the two in sync.
   --employee-grid-columns: 6fr 4fr 32px;
+
+  // Rows are a fixed height so the page size can be computed from the
+  // available viewport height (see useFitRows). Keep in sync with the
+  // sm avatar (2.5em) + .employeeCard padding (1em x2) + 1px border.
+  --employee-row-height: 73px;
 
   @include q.md {
     --employee-grid-columns: 5fr 3fr 2fr 32px;

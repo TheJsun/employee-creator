@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import classes from "./Pagination.module.scss";
 
 interface PaginationProps {
@@ -5,6 +6,7 @@ interface PaginationProps {
   totalItems: number;
   pageSize: number;
   onPageChange: (page: number) => void;
+  containerRef?: Ref<HTMLDivElement>;
 }
 
 export default function Pagination({
@@ -12,39 +14,41 @@ export default function Pagination({
   totalItems,
   pageSize,
   onPageChange,
+  containerRef,
 }: PaginationProps) {
-  const totalPages = Math.ceil(totalItems / pageSize);
-  if (totalPages <= 1) {
-    return null;
-  }
+  const safePageSize = Number.isFinite(pageSize) && pageSize > 0 ? pageSize : 1;
+  // Always at least one page, so an empty list reads "Page 1 of 1" and the bar
+  // keeps its place in the layout instead of collapsing.
+  const totalPages = Math.max(1, Math.ceil(totalItems / safePageSize));
+  const page = Math.min(Math.max(currentPage, 1), totalPages);
 
   const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+    if (page > 1) {
+      onPageChange(page - 1);
     }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
+    if (page < totalPages) {
+      onPageChange(page + 1);
     }
   };
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} ref={containerRef}>
       <button
         className={classes.btn}
-        disabled={currentPage <= 1}
+        disabled={page <= 1}
         onClick={handlePrevious}
       >
         Previous
       </button>
       <span className={classes.pageText}>
-        Page {currentPage} of {totalPages}
+        Page {page} of {totalPages}
       </span>
       <button
         className={classes.btn}
-        disabled={currentPage >= totalPages}
+        disabled={page >= totalPages}
         onClick={handleNext}
       >
         Next

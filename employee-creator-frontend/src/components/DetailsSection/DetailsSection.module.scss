@@ -28,6 +28,7 @@
   display: grid;
   grid-template-columns: 1fr;
   row-gap: 0.25em;
+  min-width: 0;
 
   @include q.md {
     grid-template-columns: 80px 1fr;
@@ -38,9 +39,15 @@
   &__label {
     color: grey;
     font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__data {
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

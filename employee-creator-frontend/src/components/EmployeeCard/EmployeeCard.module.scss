@@ -7,6 +7,7 @@ p {
 .employeeCard {
   display: grid;
   grid-template-columns: var(--employee-grid-columns, 6fr 4fr 32px);
+  height: var(--employee-row-height, 73px);
   width: 100%;
   align-items: center;
   padding: 1em 1.5em;

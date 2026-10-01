@@ -4,28 +4,35 @@ import { useEmployees } from "../../hooks/useEmployees";
 import { useNavigate } from "react-router";
 import classes from "./HomePage.module.scss";
 import HomeHeader from "../../components/Header/HomeHeader";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { useColumns } from "../../hooks/useBreakpoints";
+import { useFitRows } from "../../hooks/useFitRows";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
-
-const ROWS_PER_PAGE = 5;
 
 const HomePage = () => {
   const { data: employees = [], isLoading, isError, error } = useEmployees();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const columns = useColumns();
-  const pageSize = columns * ROWS_PER_PAGE;
+
+  const listBodyRef = useRef<HTMLDivElement>(null);
+  const paginationRef = useRef<HTMLDivElement>(null);
+  const pageSize = useFitRows({
+    bodyRef: listBodyRef,
+    footerRef: paginationRef,
+    minRows: 3,
+  });
 
   const { handleDelete, handleEdit, isDeleting, isDeleteError } =
     useEmployeeActions();
 
-  useEffect(() => {
+  // Reset here rather than in an effect: a new search should show its first
+  // results, and doing it on the event avoids an extra render pass.
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
     setCurrentPage(1);
-  }, [columns, searchTerm]);
+  };
 
   const filteredEmployees = employees.filter((emp) =>
     `${emp.firstName} ${emp.middleName} ${emp.lastName}`
@@ -34,9 +41,16 @@ const HomePage = () => {
       .includes(searchTerm.toLowerCase()),
   );
 
-  const startIndex = (currentPage - 1) * pageSize;
+  // Clamp rather than reset, so resizing the window keeps you roughly where
+  // you were instead of throwing you back to page 1.
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredEmployees.length / pageSize),
+  );
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * pageSize;
 
-  const paginatedEmployees = filteredEmployees?.slice(
+  const paginatedEmployees = filteredEmployees.slice(
     startIndex,
     startIndex + pageSize,
   );
@@ -58,7 +72,7 @@ const HomePage = () => {
           <SearchBar
             placeholder="Search name, role or email"
             value={searchTerm}
-            onChange={setSearchTerm}
+            onChange={handleSearchChange}
           />
           <EmployeeList
             employees={paginatedEmployees}
@@ -67,6 +81,7 @@ const HomePage = () => {
             isLoading={isLoading}
             isError={isError}
             error={error}
+            listBodyRef={listBodyRef}
           />
         </div>
       </section>
@@ -79,10 +94,11 @@ const HomePage = () => {
         </p>
       )}
       <Pagination
-        currentPage={currentPage}
-        totalItems={employees.length}
+        currentPage={safePage}
+        totalItems={filteredEmployees.length}
         pageSize={pageSize}
         onPageChange={setCurrentPage}
+        containerRef={paginationRef}
       />
     </main>
   );
