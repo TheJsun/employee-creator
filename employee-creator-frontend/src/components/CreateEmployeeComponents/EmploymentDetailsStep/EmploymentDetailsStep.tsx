@@ -50,7 +50,7 @@ export default function EmploymentDetailsStep({
         {...register("departmentId")}
         required
       >
-        <option value="" disabled>
+        <option value="" disabled selected>
           Select Department
         </option>
         {departments.map((d) => (

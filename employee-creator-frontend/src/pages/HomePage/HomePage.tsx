@@ -10,12 +10,25 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import { useFitRows } from "../../hooks/useFitRows";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
 import { getFullName } from "../../services/employee-profile";
+import { useDepartments } from "../../hooks/useDepartments";
+
+const EMPLOYMENT_TYPES = ["FULL_TIME", "PART_TIME"] as const;
+const CONTRACT_TYPES = ["PERMANENT", "CONTRACT"] as const;
 
 const HomePage = () => {
   const { data: employees = [], isLoading, isError, error } = useEmployees();
+  const {
+    data: departments,
+    isLoading: isDepartmentsLoading,
+    isError: isDepartmentsError,
+  } = useDepartments();
+
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [department, setDepartment] = useState("");
+  const [employmentType, setEmploymentType] = useState("");
+  const [contractType, setContractType] = useState("");
 
   const listBodyRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
@@ -35,7 +48,7 @@ const HomePage = () => {
 
   const query = searchTerm.trim().toLowerCase();
 
-  const filteredEmployees = query
+  const searchedEmployees = query
     ? employees.filter((emp) =>
         [getFullName(emp), emp.jobRole, emp.email]
           .join(" ")
@@ -43,6 +56,13 @@ const HomePage = () => {
           .includes(query),
       )
     : employees;
+
+  const filteredEmployees = searchedEmployees.filter(
+    (emp) =>
+      (department === "" || emp.department.name == department) &&
+      (employmentType === "" || emp.employmentType === employmentType) &&
+      (contractType === "" || emp.contractType === contractType),
+  );
 
   const totalPages = Math.max(
     1,
@@ -75,6 +95,48 @@ const HomePage = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <div>
+            <select
+              value={department}
+              onChange={(e) => {
+                setDepartment(e.target.value);
+              }}
+            >
+              <option value="">All departments</option>
+              {departments?.map((d) => (
+                <option key={d.id} value={d.name}>
+                  {d.name}
+                </option>
+              ))}{" "}
+            </select>
+            <select
+              value={employmentType}
+              onChange={(e) => {
+                setEmploymentType(e.target.value);
+              }}
+            >
+              <option value="">All employments</option>
+              {EMPLOYMENT_TYPES.map((employment) => (
+                <option key={employment} value={employment}>
+                  {employment}
+                </option>
+              ))}
+            </select>
+            <select
+              value={contractType}
+              onChange={(e) => {
+                setContractType(e.target.value);
+              }}
+            >
+              <option value="">All contracts</option>
+              {CONTRACT_TYPES.map((contract) => (
+                <option key={contract} value={contract}>
+                  {contract}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <EmployeeList
             employees={paginatedEmployees}
             onDelete={handleDelete}

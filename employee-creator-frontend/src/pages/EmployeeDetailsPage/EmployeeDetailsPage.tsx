@@ -32,7 +32,7 @@ export function EmployeeDetailsPage() {
   const employmentPlaceholderFields = [
     { label: "Job Title", value: "" },
     { label: "Department", value: "" },
-    { label: "Type", value: "" },
+    { label: "Employment", value: "" },
     { label: "Contract", value: "" },
     { label: "Term", value: "" },
     { label: "Hours per week", value: "" },
@@ -91,7 +91,7 @@ export function EmployeeDetailsPage() {
         value: employee.department.name,
       },
       {
-        label: "Type",
+        label: "Employment",
         value: `${formatEmploymentType(employee.employmentType)}`,
       },
       { label: "Contract", value: formatContractType(employee.contractType) },
