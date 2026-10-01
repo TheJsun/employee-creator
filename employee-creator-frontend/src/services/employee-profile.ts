@@ -7,6 +7,16 @@ export function getInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 }
 
+export function getFullName(employee: {
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+}): string {
+  return [employee.firstName, employee.middleName, employee.lastName]
+    .filter(Boolean)
+    .join(" ");
+}
+
 export function formatEmploymentType(type: EmploymentType): string {
   return type === "FULL_TIME" ? "Full-time" : "Part-time";
 }

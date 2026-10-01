@@ -9,6 +9,7 @@ import type { EmployeeResponse } from "../../schemas/employee-schema";
 import {
   formatContractType,
   formatEmploymentType,
+  getFullName,
 } from "../../services/employee-profile";
 
 interface EmployeeDetailsHeaderProps {
@@ -24,9 +25,7 @@ export default function EmployeeDetailsHeader({
   onDelete,
   isLoading,
 }: EmployeeDetailsHeaderProps) {
-  const fullName = employee
-    ? `${employee.firstName} ${employee.middleName} ${employee.lastName}`
-    : "";
+  const fullName = employee ? getFullName(employee) : "";
   const subtitle = employee
     ? [
         employee.jobRole,

@@ -9,6 +9,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useFitRows } from "../../hooks/useFitRows";
 import { useEmployeeActions } from "../../hooks/useEmployeeActions";
+import { getFullName } from "../../services/employee-profile";
 
 const HomePage = () => {
   const { data: employees = [], isLoading, isError, error } = useEmployees();
@@ -27,22 +28,22 @@ const HomePage = () => {
   const { handleDelete, handleEdit, isDeleting, isDeleteError } =
     useEmployeeActions();
 
-  // Reset here rather than in an effect: a new search should show its first
-  // results, and doing it on the event avoids an extra render pass.
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
   };
 
-  const filteredEmployees = employees.filter((emp) =>
-    `${emp.firstName} ${emp.middleName} ${emp.lastName}`
-      .toLowerCase()
-      .replaceAll("  ", " ")
-      .includes(searchTerm.toLowerCase()),
-  );
+  const query = searchTerm.trim().toLowerCase();
 
-  // Clamp rather than reset, so resizing the window keeps you roughly where
-  // you were instead of throwing you back to page 1.
+  const filteredEmployees = query
+    ? employees.filter((emp) =>
+        [getFullName(emp), emp.jobRole, emp.email]
+          .join(" ")
+          .toLowerCase()
+          .includes(query),
+      )
+    : employees;
+
   const totalPages = Math.max(
     1,
     Math.ceil(filteredEmployees.length / pageSize),

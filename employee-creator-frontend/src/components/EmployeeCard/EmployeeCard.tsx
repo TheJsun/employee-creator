@@ -7,6 +7,7 @@ import {
   formatContractType,
   formatEmploymentType,
   formatStartDate,
+  getFullName,
 } from "../../services/employee-profile";
 
 interface EmployeeCardProps {
@@ -31,7 +32,7 @@ export default function EmployeeCard({
         <EmployeeAvatar size="sm" employee={employee} />
         <div className={classes.employeeIdentity__text}>
           <p className={classes.employeeIdentity__name}>
-            {employee.firstName} {employee?.middleName} {employee.lastName}
+            {getFullName(employee)}
           </p>
           <p className={classes.employeeIdentity__role}>{employee.jobRole}</p>
         </div>
