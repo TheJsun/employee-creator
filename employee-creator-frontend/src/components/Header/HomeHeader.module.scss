@@ -5,7 +5,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  min-height: 20vh;
+  min-height: max(180px, 20vh);
   background-color: var(--bg-primary);
   color: var(--text-white);
   padding: 2em 1.5em;
