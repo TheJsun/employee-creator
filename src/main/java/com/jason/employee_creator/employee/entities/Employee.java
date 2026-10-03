@@ -81,6 +81,40 @@ public class Employee {
   @ManyToOne(fetch = FetchType.LAZY)
   private Department department;
 
+  public Employee() {}
+
+  public Employee(
+    @NotBlank @Size(max = 50) String firstName,
+    @NotBlank @Size(max = 50) String lastName,
+    @Size(max = 50) String middleName,
+    @NotBlank @Email String email,
+    @NotBlank String phoneNumber,
+    @NotBlank String address,
+    @NotBlank @Size(max = 50) String jobRole,
+    @NotNull ContractType contractType,
+    @NotNull LocalDate startDate,
+    LocalDate finishDate,
+    @NotNull Boolean onGoing,
+    @NotNull EmploymentType employmentType,
+    @NotNull @Min(1) @Max(168) Integer hoursPerWeek,
+    Department department
+  ) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.middleName = middleName;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.jobRole = jobRole;
+    this.contractType = contractType;
+    this.startDate = startDate;
+    this.finishDate = finishDate;
+    this.onGoing = onGoing;
+    this.employmentType = employmentType;
+    this.hoursPerWeek = hoursPerWeek;
+    this.department = department;
+  }
+
   public Long getId() {
     return id;
   }

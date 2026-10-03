@@ -20,6 +20,10 @@ public class Department {
 
   public Department() {}
 
+  public Department(@NotBlank String name) {
+    this.name = name;
+  }
+
   public Long getId() {
     return id;
   }

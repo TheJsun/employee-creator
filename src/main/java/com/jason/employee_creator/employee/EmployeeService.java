@@ -8,10 +8,18 @@ import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.dtos.UpdateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
+import com.jason.employee_creator.user.CurrentUser;
+import com.jason.employee_creator.user.User;
+import com.jason.employee_creator.user.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -20,15 +28,18 @@ public class EmployeeService {
   private final EmployeeRepository repo;
   private final ModelMapper mapper;
   private final DepartmentRepository departmentRepository;
+  private final UserRepository userRepository;
 
   public EmployeeService(
     EmployeeRepository repo,
     ModelMapper mapper,
-    DepartmentRepository departmentRepository
+    DepartmentRepository departmentRepository,
+    UserRepository userRepository
   ) {
     this.repo = repo;
     this.mapper = mapper;
     this.departmentRepository = departmentRepository;
+    this.userRepository = userRepository;
   }
 
   public List<Employee> findAll() {
@@ -54,6 +65,7 @@ public class EmployeeService {
     return departmentResult;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   public Employee create(CreateEmployeeRequest data) {
     log.info("Attempting to create employee with email={}", data.getEmail());
 
@@ -76,20 +88,51 @@ public class EmployeeService {
     return createdEmployee;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
   public void deleteById(Long id) {
     log.info("Attempting to delete employee id={}", id);
 
     Employee target = this.findById(id);
 
+    // users.employee_id is a foreign key, so a linked login account has to go
+    // first or the delete fails with a constraint violation.
+    Optional<User> linkedUser = this.userRepository.findByEmployeeId(id);
+    if (linkedUser.isPresent()) {
+      User user = linkedUser.get();
+
+      if (isCurrentUser(user)) {
+        log.warn("Refused self-deletion of user id={}", user.getId());
+        throw new UnprocessableContentException(
+          "You cannot delete your own employee record"
+        );
+      }
+
+      this.userRepository.delete(user);
+      log.info("Deleted login account id={} for employee id={}", user.getId(), id);
+    }
+
     this.repo.delete(target);
     log.info("Deleted employee id={}", id);
   }
 
+  private boolean isCurrentUser(User user) {
+    Authentication authentication = SecurityContextHolder.getContext()
+      .getAuthentication();
+    if (authentication == null) {
+      return false;
+    }
+    return (
+      authentication.getPrincipal() instanceof CurrentUser currentUser &&
+      currentUser.getId().equals(user.getId())
+    );
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
   public Employee update(Long id, UpdateEmployeeRequest data) {
     Employee existing = findById(id);
     if (
-      data.getEmail() != null &&
-      repo.existsByEmailAndIdNot(data.getEmail(), id)
+      data.getEmail() != null && repo.existsByEmailAndIdNot(data.getEmail(), id)
     ) {
       throw new DuplicateFieldException("email", data.getEmail());
     }

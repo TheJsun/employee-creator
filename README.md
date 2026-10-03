@@ -4,7 +4,7 @@ A full-stack app for managing employees and departments: a Spring Boot REST API 
 
 ## Architecture
 
-- **Backend** (repo root): Spring Boot 4.1.1 / Java 17, package-by-feature under `src/main/java/com/jason/employee_creator/` (`employee/`, `department/`, `common/` for shared exceptions and error handling, `config/` for CORS and ModelMapper setup). Persistence via Spring Data JPA/Hibernate against MySQL (H2 in-memory for tests). REST endpoints are exposed at `/api/employees` and `/api/departments`.
+- **Backend** (repo root): Spring Boot 4.1.1 / Java 17, package-by-feature under `src/main/java/com/jason/employee_creator/` (`employee/`, `department/`, `common/` for shared exceptions and error handling, `config/` for security, CORS and ModelMapper setup, `user/` and `auth/` for authentication). Persistence via Spring Data JPA/Hibernate against MySQL (H2 in-memory for tests). REST endpoints are exposed at `/api/employees` and `/api/departments`.
 - **Frontend** (`employee-creator-frontend/`): React 19 + TypeScript, built with Vite. Server state is managed with React Query, forms with react-hook-form + Zod, styling with CSS Modules/SCSS.
 
 ## Prerequisites
@@ -19,17 +19,68 @@ A full-stack app for managing employees and departments: a Spring Boot REST API 
 ./mvnw spring-boot:run
 ```
 
-Required environment variable:
+Required environment variables:
 
 - `DB_USERNAME` — MySQL username (the schema `employee_creator` must already exist).
+- `DB_PASSWORD` — MySQL password.
 
-**Note:** `src/main/resources/application.properties` currently has the database password hardcoded rather than read from an environment variable. Before using this against any real database, replace it with your own credential and externalize it (e.g. a `DB_PASSWORD` environment variable) rather than committing it to source control.
+Neither is committed. Set them in your shell before starting the app:
+
+```bash
+export DB_USERNAME=root
+export DB_PASSWORD=your-password
+./mvnw spring-boot:run
+```
 
 Tests run with:
 
 ```bash
 ./mvnw test
 ```
+
+## Authentication
+
+Session-cookie authentication via Spring Security. Logging in returns a `JSESSIONID`
+cookie that must be sent with every subsequent request; browsers only do this
+cross-origin when the client sets `credentials: "include"` on its requests.
+
+| Endpoint | Access |
+| --- | --- |
+| `POST /api/auth/login` | Public. Body `{ "email": "...", "password": "..." }`. Returns the current user; 401 on bad credentials. |
+| `POST /api/auth/logout` | Invalidates the session. |
+| `GET /api/me` | Any authenticated user. Returns `userId`, `email`, `role`, `employeeId`. |
+| `GET /api/employees`, `GET /api/departments` (and `/{id}`) | Any authenticated user. |
+| `POST`, `PUT`, `PATCH`, `DELETE` on employees and departments | `ADMIN` only. |
+
+Roles are `ADMIN` and `EMPLOYEE`, enforced with `@PreAuthorize("hasRole('ADMIN')")`
+on the service methods. Unauthenticated requests get 401, authenticated
+non-admins get 403.
+
+Deleting an employee also deletes their linked login account, since
+`users.employee_id` is a foreign key. An admin cannot delete their own employee
+record.
+
+### Demo users
+
+`DataSeeder` runs only under the `dev` profile (active by default locally) and
+only when the `users` table is empty:
+
+| Email | Password | Role |
+| --- | --- | --- |
+| `admin@demo.com` | `admin123` | `ADMIN` |
+| `bob@demo.com` | `password123` | `EMPLOYEE` |
+| `alice@demo.com` | `password123` | `EMPLOYEE` |
+
+These are throwaway development credentials. Do not run the `dev` profile
+against anything you care about.
+
+### Known gap
+
+CSRF protection is disabled (`SecurityConfig`). Combined with cookie sessions
+and `allowCredentials(true)` CORS, that is a real exposure and is only
+acceptable for local development. Before deploying, enable
+`CookieCsrfTokenRepository.withHttpOnlyFalse()` and send the `XSRF-TOKEN`
+cookie back as an `X-XSRF-TOKEN` header from the frontend.
 
 ## Running the frontend
 

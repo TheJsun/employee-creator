@@ -12,6 +12,8 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -100,15 +102,61 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Thrown by AuthenticationManager.authenticate() during login. Without this
+   * handler a bad password falls through to handleUnexpected and returns 500.
+   * The message is deliberately generic so we do not reveal whether the email
+   * exists.
+   */
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
+    AuthenticationException ex,
+    HttpServletRequest req
+  ) {
+    log.warn(
+      "Authentication failed on {}: {}",
+      req.getRequestURI(),
+      ex.getMessage()
+    );
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.UNAUTHORIZED,
+      "Invalid email or password",
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+  }
+
+  /**
+   * Thrown by @PreAuthorize as AuthorizationDeniedException. This is raised
+   * inside the controller call stack, so it never reaches
+   * ExceptionTranslationFilter - without this handler a non-admin would get a
+   * 500 instead of a 403.
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ApiErrorResponse> handleAccessDeniedException(
+    AccessDeniedException ex,
+    HttpServletRequest req
+  ) {
+    log.warn("Access denied on {}: {}", req.getRequestURI(), ex.getMessage());
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.FORBIDDEN,
+      "You do not have permission to perform this action",
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+  }
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ApiErrorResponse> handleUnexpected(
     Exception ex,
     HttpServletRequest req
   ) {
     log.warn("Unhandled exception: {}", ex.getMessage(), ex);
+    // The real message stays in the log - returning it would leak internal
+    // detail such as SQL or stack text to the client.
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.INTERNAL_SERVER_ERROR,
-      ex.getMessage(),
+      "An unexpected error occurred",
       req.getRequestURI()
     );
     return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

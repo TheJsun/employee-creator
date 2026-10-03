@@ -18,7 +18,7 @@ public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @Column(nullable = false, unique = true)
   private String email;
@@ -31,30 +31,23 @@ public class User {
   private Role role;
 
   @OneToOne
-  @JoinColumn(name = "employee_id")
+  @JoinColumn(name = "employee_id", unique = true)
   private Employee employee;
 
   protected User() {}
 
-  public User(
-    long id,
-    String email,
-    String password,
-    Role role,
-    Employee employee
-  ) {
-    this.id = id;
+  public User(String email, String password, Role role, Employee employee) {
     this.email = email;
     this.password = password;
     this.role = role;
     this.employee = employee;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

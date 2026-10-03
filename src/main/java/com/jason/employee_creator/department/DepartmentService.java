@@ -10,6 +10,7 @@ import com.jason.employee_creator.employee.EmployeeRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +43,7 @@ public class DepartmentService {
       );
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   public Department create(CreateDepartmentRequest data) {
     log.info("Attempting to create department with name={}", data.getName());
 
@@ -60,6 +62,7 @@ public class DepartmentService {
     return createdDepartment;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   public void deleteById(Long id) {
     log.info("Attempting to delete department id={}", id);
     Department target = this.findById(id);
@@ -71,6 +74,7 @@ public class DepartmentService {
     log.info("Deleted department id={}", id);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   public Department update(Long id, UpdateDepartmentRequest data) {
     Department existing = this.findById(id);
 
