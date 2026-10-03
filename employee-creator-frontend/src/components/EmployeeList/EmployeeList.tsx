@@ -51,6 +51,7 @@ export default function EmployeeList({
         )}
 
         {!isLoading &&
+          !isError &&
           employees.map((emp) => (
             <EmployeeCard
               key={emp.id}
