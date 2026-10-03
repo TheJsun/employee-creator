@@ -3,56 +3,51 @@ package com.jason.employee_creator.employee;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.jason.employee_creator.department.DepartmentRepository;
 import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.ContractType;
 import com.jason.employee_creator.employee.entities.Employee;
 import com.jason.employee_creator.employee.entities.EmploymentType;
-import io.restassured.RestAssured;
+import com.jason.employee_creator.support.ApiIntegrationTest;
+import com.jason.employee_creator.user.Role;
+import com.jason.employee_creator.user.User;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(
-  scripts = "/sql/cleanup.sql",
-  executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
-)
-public class EmployeeEndToEndTest {
+public class EmployeeEndToEndTest extends ApiIntegrationTest {
 
-  @LocalServerPort
-  private int port;
-
-  @Autowired
-  private EmployeeRepository employeeRepository;
-
-  @Autowired
-  private DepartmentRepository departmentRepository;
-
-  @BeforeEach
-  public void setup() {
-    RestAssured.port = this.port;
-  }
-
-  private Department createDepartment(String name) {
-    Department department = new Department();
-    department.setName(name);
-    return this.departmentRepository.saveAndFlush(department);
+  private CreateEmployeeRequest validRequest(Long departmentId) {
+    CreateEmployeeRequest dto = new CreateEmployeeRequest();
+    dto.setFirstName("validFirstName");
+    dto.setLastName("validLastName");
+    dto.setMiddleName("validMiddleName");
+    dto.setEmail("validEmail@gmail.com");
+    dto.setPhoneNumber("0412345678");
+    dto.setAddress("123 Example Street, Melbourne VIC 3000");
+    dto.setJobRole("Software Engineer");
+    dto.setDepartmentId(departmentId);
+    dto.setContractType(ContractType.CONTRACT);
+    dto.setStartDate(LocalDate.of(2023, 6, 1));
+    dto.setFinishDate(LocalDate.of(2024, 6, 1));
+    dto.setOnGoing(false);
+    dto.setEmploymentType(EmploymentType.PART_TIME);
+    dto.setHoursPerWeek(30);
+    return dto;
   }
 
   //Tests for Getting Employees
 
   @Test
   public void getAllEmployees_noEmployeesInDB_returnOkAndEmptyArray() {
+    String session = employeeSession();
+
     given()
+      .cookie(SESSION_COOKIE, session)
       .when()
       .get("/api/employees")
       .then()
@@ -64,6 +59,8 @@ public class EmployeeEndToEndTest {
 
   @Test
   public void getAllEmployee_employeesInDB_returnsOkAndArrayOfEmployees() {
+    String session = employeeSession();
+
     Employee employee1 = new Employee();
     employee1.setFirstName("Jane");
     employee1.setLastName("Doe");
@@ -97,6 +94,7 @@ public class EmployeeEndToEndTest {
     employeeRepository.saveAndFlush(employee2);
 
     given()
+      .cookie(SESSION_COOKIE, session)
       .when()
       .get("/api/employees")
       .then()
@@ -128,27 +126,13 @@ public class EmployeeEndToEndTest {
   //Tests for Creating Employees
   @Test
   public void createEmployee_validDTO_created() {
+    String session = adminSession();
     Department department = createDepartment("Engineering");
 
-    CreateEmployeeRequest dto = new CreateEmployeeRequest();
-    dto.setFirstName("validFirstName");
-    dto.setLastName("validLastName");
-    dto.setMiddleName("validMiddleName");
-    dto.setEmail("validEmail@gmail.com");
-    dto.setPhoneNumber("0412345678");
-    dto.setAddress("123 Example Street, Melbourne VIC 3000");
-    dto.setJobRole("Software Engineer");
-    dto.setDepartmentId(department.getId());
-    dto.setContractType(ContractType.CONTRACT);
-    dto.setStartDate(LocalDate.of(2023, 6, 1));
-    dto.setFinishDate(LocalDate.of(2024, 6, 1));
-    dto.setOnGoing(false);
-    dto.setEmploymentType(EmploymentType.PART_TIME);
-    dto.setHoursPerWeek(30);
-
     given()
+      .cookie(SESSION_COOKIE, session)
       .contentType(ContentType.JSON)
-      .body(dto)
+      .body(validRequest(department.getId()))
       .when()
       .post("/api/employees")
       .then()
@@ -174,6 +158,8 @@ public class EmployeeEndToEndTest {
 
   @Test
   public void createEmployee_invalidDTO_badRequest() {
+    String session = adminSession();
+
     CreateEmployeeRequest dto = new CreateEmployeeRequest();
     dto.setFirstName("");
     dto.setLastName("");
@@ -192,6 +178,7 @@ public class EmployeeEndToEndTest {
     dto.setHoursPerWeek(-10);
 
     given()
+      .cookie(SESSION_COOKIE, session)
       .contentType(ContentType.JSON)
       .body(dto)
       .when()
@@ -220,6 +207,7 @@ public class EmployeeEndToEndTest {
 
   @Test
   public void createEmployee_duplicateField_returnsConflict() {
+    String session = adminSession();
     Department department = createDepartment("Engineering");
 
     Employee employee1 = new Employee();
@@ -255,6 +243,7 @@ public class EmployeeEndToEndTest {
     employee2.setHoursPerWeek(20);
 
     given()
+      .cookie(SESSION_COOKIE, session)
       .contentType(ContentType.JSON)
       .body(employee2)
       .when()
@@ -271,25 +260,13 @@ public class EmployeeEndToEndTest {
   //Tests for Deleting Employee
   @Test
   public void deleteEmployee_employeeInDB_deleted() {
-    Employee employee1 = new Employee();
-    employee1.setFirstName("Jane");
-    employee1.setLastName("Doe");
-    employee1.setMiddleName("Marie");
-    employee1.setEmail("jane.doe@example.com");
-    employee1.setPhoneNumber("0412345678");
-    employee1.setAddress("123 Example Street, Melbourne VIC 3000");
-    employee1.setJobRole("Software Engineer");
-    employee1.setContractType(ContractType.PERMANENT);
-    employee1.setStartDate(LocalDate.of(2024, 1, 15));
-    employee1.setFinishDate(null);
-    employee1.setOnGoing(true);
-    employee1.setEmploymentType(EmploymentType.FULL_TIME);
-    employee1.setHoursPerWeek(38);
-    employeeRepository.saveAndFlush(employee1);
+    String session = adminSession();
+    Employee employee1 = persistEmployee("Jane", "jane.doe@example.com");
 
     given()
+      .cookie(SESSION_COOKIE, session)
       .when()
-      .delete("api/employees/" + employee1.getId())
+      .delete("/api/employees/" + employee1.getId())
       .then()
       .log()
       .body()
@@ -298,7 +275,10 @@ public class EmployeeEndToEndTest {
 
   @Test
   public void deleteTodo_todoNotInDB_NotFound() {
+    String session = adminSession();
+
     given()
+      .cookie(SESSION_COOKIE, session)
       .when()
       .delete("/api/employees/1")
       .then()
@@ -306,5 +286,143 @@ public class EmployeeEndToEndTest {
       .body()
       .statusCode(HttpStatus.NOT_FOUND.value())
       .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  /**
+   * users.employee_id is a foreign key, so deleting an employee that has a
+   * login account used to fail with a constraint violation surfaced as a 500.
+   */
+  @Test
+  public void deleteEmployee_employeeHasLoginAccount_deletesAccountToo() {
+    String session = adminSession();
+    Employee employee = persistEmployee("Linked", "linked@example.com");
+    createUser("linked@example.com", Role.EMPLOYEE, employee);
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .when()
+      .delete("/api/employees/" + employee.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.NO_CONTENT.value());
+
+    Optional<User> orphan = userRepository.findByEmail("linked@example.com");
+    assertTrue(
+      orphan.isEmpty(),
+      "the linked login account should have been deleted with the employee"
+    );
+  }
+
+  @Test
+  public void deleteEmployee_ownEmployeeRecord_returnsUnprocessable() {
+    Employee employee = persistEmployee("Admin", "self.admin@example.com");
+    createUser(ADMIN_EMAIL, Role.ADMIN, employee);
+    String session = login(ADMIN_EMAIL, PASSWORD);
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .when()
+      .delete("/api/employees/" + employee.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
+  }
+
+  //Tests for authentication and authorization
+
+  @Test
+  public void employeeEndpoints_noSession_returnUnauthorized() {
+    given()
+      .when()
+      .get("/api/employees")
+      .then()
+      .statusCode(HttpStatus.UNAUTHORIZED.value());
+    given()
+      .when()
+      .get("/api/employees/1")
+      .then()
+      .statusCode(HttpStatus.UNAUTHORIZED.value());
+    given()
+      .when()
+      .delete("/api/employees/1")
+      .then()
+      .statusCode(HttpStatus.UNAUTHORIZED.value());
+    given()
+      .contentType(ContentType.JSON)
+      .body(validRequest(1L))
+      .when()
+      .post("/api/employees")
+      .then()
+      .statusCode(HttpStatus.UNAUTHORIZED.value());
+  }
+
+  @Test
+  public void createEmployee_employeeRole_returnsForbidden() {
+    String session = employeeSession();
+    Department department = createDepartment("Engineering");
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .contentType(ContentType.JSON)
+      .body(validRequest(department.getId()))
+      .when()
+      .post("/api/employees")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.FORBIDDEN.value())
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  @Test
+  public void deleteEmployee_employeeRole_returnsForbidden() {
+    String session = employeeSession();
+    Employee employee = persistEmployee("Jane", "jane.doe@example.com");
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .when()
+      .delete("/api/employees/" + employee.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.FORBIDDEN.value());
+  }
+
+  @Test
+  public void updateEmployee_employeeRole_returnsForbidden() {
+    String session = employeeSession();
+    Employee employee = persistEmployee("Jane", "jane.doe@example.com");
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .contentType(ContentType.JSON)
+      .body("{\"firstName\":\"Changed\"}")
+      .when()
+      .put("/api/employees/" + employee.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.FORBIDDEN.value());
+  }
+
+  @Test
+  public void updateEmployee_adminRole_returnsOk() {
+    String session = adminSession();
+    Employee employee = persistEmployee("Jane", "jane.doe@example.com");
+
+    given()
+      .cookie(SESSION_COOKIE, session)
+      .contentType(ContentType.JSON)
+      .body("{\"firstName\":\"Changed\"}")
+      .when()
+      .put("/api/employees/" + employee.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.OK.value())
+      .body("firstName", equalTo("Changed"));
   }
 }
