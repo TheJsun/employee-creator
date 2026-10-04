@@ -59,9 +59,7 @@ public class AuthEndToEndTest extends ApiIntegrationTest {
 
     given()
       .contentType(ContentType.JSON)
-      .body(
-        Map.of("email", EMPLOYEE_EMAIL.toUpperCase(), "password", PASSWORD)
-      )
+      .body(Map.of("email", EMPLOYEE_EMAIL.toUpperCase(), "password", PASSWORD))
       .when()
       .post("/api/auth/login")
       .then()
@@ -69,10 +67,6 @@ public class AuthEndToEndTest extends ApiIntegrationTest {
       .body("email", equalTo(EMPLOYEE_EMAIL));
   }
 
-  /**
-   * Regression test: the handler used to catch the SASL AuthenticationException
-   * rather than Spring Security's, so a bad password returned 500.
-   */
   @Test
   public void login_wrongPassword_returnsUnauthorized() {
     createUser(ADMIN_EMAIL, Role.ADMIN, null);
@@ -101,8 +95,6 @@ public class AuthEndToEndTest extends ApiIntegrationTest {
       .log()
       .body()
       .statusCode(HttpStatus.UNAUTHORIZED.value())
-      // Identical to the wrong-password response so the endpoint cannot be
-      // used to discover which emails are registered.
       .body("message", equalTo("Invalid email or password"));
   }
 
@@ -117,12 +109,6 @@ public class AuthEndToEndTest extends ApiIntegrationTest {
       .statusCode(HttpStatus.BAD_REQUEST.value());
   }
 
-  /**
-   * Logging in on an existing session must issue a new session id. Login runs
-   * in a controller rather than a filter, so the rotation is done by hand with
-   * ChangeSessionIdAuthenticationStrategy - without it the pre-login id would
-   * survive authentication.
-   */
   @Test
   public void login_onExistingSession_rotatesSessionId() {
     createUser(ADMIN_EMAIL, Role.ADMIN, null);

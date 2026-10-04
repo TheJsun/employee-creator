@@ -102,12 +102,6 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
-  /**
-   * Thrown by AuthenticationManager.authenticate() during login. Without this
-   * handler a bad password falls through to handleUnexpected and returns 500.
-   * The message is deliberately generic so we do not reveal whether the email
-   * exists.
-   */
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
     AuthenticationException ex,
@@ -126,12 +120,6 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
   }
 
-  /**
-   * Thrown by @PreAuthorize as AuthorizationDeniedException. This is raised
-   * inside the controller call stack, so it never reaches
-   * ExceptionTranslationFilter - without this handler a non-admin would get a
-   * 500 instead of a 403.
-   */
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ApiErrorResponse> handleAccessDeniedException(
     AccessDeniedException ex,
@@ -152,8 +140,6 @@ public class GlobalExceptionHandler {
     HttpServletRequest req
   ) {
     log.warn("Unhandled exception: {}", ex.getMessage(), ex);
-    // The real message stays in the log - returning it would leak internal
-    // detail such as SQL or stack text to the client.
     ApiErrorResponse response = ApiErrorResponse.of(
       HttpStatus.INTERNAL_SERVER_ERROR,
       "An unexpected error occurred",

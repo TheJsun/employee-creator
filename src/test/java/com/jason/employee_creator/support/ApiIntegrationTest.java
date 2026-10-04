@@ -23,14 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 
-/**
- * Shared setup for the end-to-end suites. Every endpoint except
- * POST /api/auth/login now requires an authenticated session, so each test has
- * to create a user and log in before it can call the API.
- *
- * DataSeeder is annotated @Profile("dev") and the dev profile is not active in
- * tests, so the database starts empty and cleanup.sql can truncate it.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(
   scripts = "/sql/cleanup.sql",
@@ -71,11 +63,10 @@ public abstract class ApiIntegrationTest {
 
   protected User createUser(String email, Role role, Employee employee) {
     return this.userRepository.saveAndFlush(
-        new User(email, this.passwordEncoder.encode(PASSWORD), role, employee)
-      );
+      new User(email, this.passwordEncoder.encode(PASSWORD), role, employee)
+    );
   }
 
-  /** Logs in and returns the session cookie value. */
   protected String login(String email, String password) {
     return given()
       .contentType(ContentType.JSON)
@@ -88,13 +79,11 @@ public abstract class ApiIntegrationTest {
       .cookie(SESSION_COOKIE);
   }
 
-  /** Creates an ADMIN user with no linked employee record and logs in. */
   protected String adminSession() {
     createUser(ADMIN_EMAIL, Role.ADMIN, null);
     return login(ADMIN_EMAIL, PASSWORD);
   }
 
-  /** Creates an EMPLOYEE user with no linked employee record and logs in. */
   protected String employeeSession() {
     createUser(EMPLOYEE_EMAIL, Role.EMPLOYEE, null);
     return login(EMPLOYEE_EMAIL, PASSWORD);

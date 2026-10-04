@@ -17,11 +17,8 @@ public class AppUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) {
-    // Emails are stored lowercase, so normalise the lookup. Without this,
-    // login is case-sensitive on H2 but not on MySQL.
-    String normalisedEmail = email == null
-      ? ""
-      : email.trim().toLowerCase(Locale.ROOT);
+    String normalisedEmail =
+      email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
 
     User user = userRepository
       .findByEmail(normalisedEmail)

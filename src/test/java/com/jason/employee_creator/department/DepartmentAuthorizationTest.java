@@ -10,11 +10,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-/**
- * Covers who may change departments. The read endpoints are open to any
- * authenticated user; create, update and delete are ADMIN only via
- * {@code @PreAuthorize} on DepartmentService.
- */
 public class DepartmentAuthorizationTest extends ApiIntegrationTest {
 
   @Test
