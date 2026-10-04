@@ -70,14 +70,10 @@ public class AuthController {
         request.password()
       );
 
-    // A failure here throws AuthenticationException, handled as a 401 by
-    // GlobalExceptionHandler.
     Authentication authenticated = authenticationManager.authenticate(
       unauthenticated
     );
 
-    // Logging in from a controller skips the filter that normally does this,
-    // so issue a fresh session id to protect against session fixation.
     sessionAuthenticationStrategy.onAuthentication(
       authenticated,
       httpRequest,

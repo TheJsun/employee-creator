@@ -35,14 +35,7 @@ public class SecurityConfig {
           .authenticated()
       )
       .cors(Customizer.withDefaults())
-      // CSRF is deliberately disabled for now. NOTE this is a real exposure:
-      // auth is session-cookie based and CORS sets allowCredentials(true), so
-      // a third-party page can drive a logged-in admin's browser into calling
-      // these endpoints. Disabling is only safe for stateless token auth.
-      // The fix when this is deployed anywhere public is
-      // csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-      // plus sending the XSRF-TOKEN cookie back as an X-XSRF-TOKEN header from
-      // the frontend on every POST/PUT/PATCH/DELETE.
+      // CSRF is deliberately disabled for now.
       .csrf(AbstractHttpConfigurer::disable)
       .securityContext(context ->
         context.securityContextRepository(securityContextRepository())
@@ -65,11 +58,6 @@ public class SecurityConfig {
     return new HttpSessionSecurityContextRepository();
   }
 
-  /**
-   * Used by AuthController to rotate the session id on login. Normally
-   * AbstractAuthenticationProcessingFilter applies this, but login happens in
-   * a controller here so it has to be invoked by hand.
-   */
   @Bean
   public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
     return new ChangeSessionIdAuthenticationStrategy();

@@ -101,31 +101,16 @@ public class EmployeeService {
     if (linkedUser.isPresent()) {
       User user = linkedUser.get();
 
-      if (isCurrentUser(user)) {
-        log.warn("Refused self-deletion of user id={}", user.getId());
-        throw new UnprocessableContentException(
-          "You cannot delete your own employee record"
-        );
-      }
-
       this.userRepository.delete(user);
-      log.info("Deleted login account id={} for employee id={}", user.getId(), id);
+      log.info(
+        "Deleted login account id={} for employee id={}",
+        user.getId(),
+        id
+      );
     }
 
     this.repo.delete(target);
     log.info("Deleted employee id={}", id);
-  }
-
-  private boolean isCurrentUser(User user) {
-    Authentication authentication = SecurityContextHolder.getContext()
-      .getAuthentication();
-    if (authentication == null) {
-      return false;
-    }
-    return (
-      authentication.getPrincipal() instanceof CurrentUser currentUser &&
-      currentUser.getId().equals(user.getId())
-    );
   }
 
   @PreAuthorize("hasRole('ADMIN')")
