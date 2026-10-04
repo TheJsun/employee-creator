@@ -7,7 +7,9 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 const EMPLOYEE_BASE_URL = `${BASE_URL}/employees`;
 
 export const getAllEmployees = async () => {
-  const response = await fetch(EMPLOYEE_BASE_URL);
+  const response = await fetch(EMPLOYEE_BASE_URL, {
+    credentials: "include",
+  });
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new Error(

@@ -1,19 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 const AUTH_BASE_URL = `${BASE_URL}/auth`;
 
-// export const getAllDepartments = async () => {
-//   const response = await fetch(`${DEPARTMENT_BASE_URL}`, {
-//     credentials: "include",
-//   });
-//   if (!response.ok) {
-//     const errorBody = await response.json().catch(() => null);
-//     throw new Error(
-//       errorBody?.message ?? `Failed to fetch departments: ${response.status}`,
-//     );
-//   }
-//   return (await response.json()) as DepartmentResponse[];
-// };
-
 export interface MeResponse {
   userId: number;
   email: string;
