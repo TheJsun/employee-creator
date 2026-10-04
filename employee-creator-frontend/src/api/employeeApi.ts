@@ -18,7 +18,9 @@ export const getAllEmployees = async () => {
 };
 
 export const getEmployeeById = async (id: number) => {
-  const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`);
+  const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`, {
+    credentials: "include",
+  });
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new Error(
@@ -32,6 +34,7 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
   const response = await fetch(EMPLOYEE_BASE_URL, {
     method: "POST",
     body: JSON.stringify(data),
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
   });
   if (!response.ok) {
@@ -46,6 +49,7 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
 export const deleteEmployee = async (id: number) => {
   const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
@@ -62,6 +66,7 @@ export const updateEmployee = async (
   const response = await fetch(`${EMPLOYEE_BASE_URL}/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
   });
   if (!response.ok) {
