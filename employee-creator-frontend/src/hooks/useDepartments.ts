@@ -51,7 +51,7 @@ export function useUpdateDepartment() {
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: CreateDepartmentRequest }) =>
       updateDepartment(id, data),
-    onSuccess: (_) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["departments"] });
     },
   });

@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
