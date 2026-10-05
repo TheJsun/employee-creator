@@ -95,6 +95,21 @@ public class EmployeeService {
 
     Employee target = this.findById(id);
 
+    // An admin deleting their own employee record would also cascade away
+    // their own login account, locking them out mid-session.
+    Authentication authentication = SecurityContextHolder
+      .getContext()
+      .getAuthentication();
+    if (
+      authentication != null &&
+      authentication.getPrincipal() instanceof CurrentUser currentUser &&
+      id.equals(currentUser.getEmployeeId())
+    ) {
+      throw new UnprocessableContentException(
+        "You cannot delete your own employee record"
+      );
+    }
+
     // users.employee_id is a foreign key, so a linked login account has to go
     // first or the delete fails with a constraint violation.
     Optional<User> linkedUser = this.userRepository.findByEmployeeId(id);

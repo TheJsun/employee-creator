@@ -102,3 +102,37 @@ Other useful scripts (run from `employee-creator-frontend/`):
 npm run build   # type-check and build for production
 npm run lint    # run ESLint
 ```
+
+## Continuous integration
+
+[![CI](https://github.com/TheJsun/employee-creator/actions/workflows/ci.yml/badge.svg)](https://github.com/TheJsun/employee-creator/actions/workflows/ci.yml)
+
+`.github/workflows/ci.yml` runs on every pull request into `main` and on pushes
+to `main`. Two jobs run in parallel:
+
+| Job | Runs |
+| --- | --- |
+| Backend (Java 17) | `./mvnw -B -ntp verify` — compiles, runs all tests, packages the jar |
+| Frontend (Node 24) | `npm ci`, then `npm run lint` and `npm run build` (the build also type-checks via `tsc -b`) |
+
+The backend job needs **no MySQL instance and no secrets**. `src/test/resources/application.properties`
+shares its filename with the main config, so on the test classpath it replaces
+it entirely — tests run against in-memory H2 with `ddl-auto=create-drop`. That
+also means `spring.profiles.active=dev` is absent under test, so `DataSeeder`
+does not run and cannot affect assertions.
+
+To reproduce a CI failure locally, run the exact commands above. Note that CI
+pins JDK 17 (matching `<java.version>` in `pom.xml`); if you have a newer JDK
+installed locally, a green local build does not guarantee a green CI build.
+
+Surefire reports are uploaded as a build artifact on every run, including
+failures, so you can download them from the Actions tab instead of reproducing
+locally.
+
+### Not yet covered
+
+- No frontend test runner (no Vitest/RTL, no test files) — the frontend job gates lint and types only
+- No backend coverage reporting (no JaCoCo)
+- No formatter check (no Prettier or `.editorconfig`)
+- `strict` is not enabled in the TypeScript config, so `tsc -b` is a weaker gate than it appears
+- No container build or deployment step
