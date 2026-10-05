@@ -1,0 +1,227 @@
+// LoginPage.module.scss
+@use "../../scss/variables/variables" as *;
+@use "../../scss/mixins/media" as q;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--bg-page);
+
+  @include q.md {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// Decorative brand copy: a full-width banner on phones that the card overlaps,
+// and the left column of the split screen from md up.
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  // The deep bottom padding is the room the card is pulled up into.
+  padding: 3rem 1.5rem 4.5rem;
+  background-color: var(--bg-primary);
+  color: var(--text-white);
+
+  @include q.md {
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  @include q.xl {
+    padding: 4rem;
+  }
+}
+
+.headline {
+  // Narrow enough to break after "your", as the mobile design does.
+  max-width: 16ch;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+
+  @include q.md {
+    max-width: 14ch;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    line-height: 1.05;
+  }
+}
+
+.subcopy {
+  display: none;
+
+  @include q.md {
+    display: block;
+    max-width: 34ch;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.65);
+  }
+}
+
+.formSide {
+  // Paints over the banner where the card is pulled up across it.
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: -2.5rem;
+  padding: 0 1rem 2rem;
+
+  @include q.md {
+    align-items: center;
+    margin-top: 0;
+    padding: 1rem;
+  }
+}
+
+// Holds the card and the footer line beneath it at a shared width.
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 2rem;
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  display: none;
+
+  @include q.md {
+    display: block;
+    margin: 0;
+    font-size: 0.85rem;
+    color: #8a8a8a;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.field {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  border: 1px solid #d5d5d5;
+  border-radius: 8px;
+
+  &::placeholder {
+    color: #9a9a9a;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-strong);
+    box-shadow: 0 0 0 3px rgba(107, 79, 187, 0.25);
+  }
+}
+
+.passwordWrap {
+  position: relative;
+  display: flex;
+
+  // Keep typed characters clear of the Show/Hide button.
+  .field {
+    padding-right: 3.75rem;
+  }
+}
+
+.toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  padding: 0.15rem 0.25rem;
+  font-size: 0.8rem;
+  color: #4a4a4a;
+  background: none;
+  border: none;
+  border-radius: 4px;
+
+  &:hover {
+    color: #1a1a1a;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(107, 79, 187, 0.25);
+  }
+}
+
+.errorBox {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  color: #d33636;
+  background-color: #fdf2f2;
+  border: 1px solid #f0b8b8;
+  border-radius: 8px;
+}
+
+// Two classes deep so the width wins over Button's own .btn padding regardless
+// of the order the two modules are injected in.
+.form .submit {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+}
+
+.footer {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #8a8a8a;
+  text-align: center;
+}
+
+.footerEmphasis {
+  font-weight: 500;
+  color: var(--accent-strong);
+}

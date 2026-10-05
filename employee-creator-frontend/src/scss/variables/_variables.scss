@@ -6,6 +6,12 @@
 
   --text-white: white;
 
+  // Lilac accent. --accent is the existing Button accent colour; --accent-strong
+  // is the darker sibling for small text and focus rings, where --accent does not
+  // have enough contrast against white.
+  --accent: #cbb8f1;
+  --accent-strong: #6b4fbb;
+
   --font: "inter", sans-serif;
 
   // Shared width cap so the homepage header content and the employee list
