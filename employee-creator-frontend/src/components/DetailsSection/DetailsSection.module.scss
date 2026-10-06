@@ -32,15 +32,14 @@
 
   @include q.md {
     grid-template-columns: 90px 1fr;
-    column-gap: 1em;
-    row-gap: 0;
+    column-gap: 1.5em;
+    row-gap: 0em;
   }
 
   &__label {
     color: grey;
     font-size: 14px;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
