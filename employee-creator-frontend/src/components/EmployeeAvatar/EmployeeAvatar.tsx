@@ -3,8 +3,8 @@ import { getAvatarColor, getInitials } from "../../services/employee-profile";
 import classes from "./EmployeeAvatar.module.scss";
 
 interface EmployeeAvatarProps {
-  employee: EmployeeResponse;
-  size: "sm" | "md";
+  employee: Pick<EmployeeResponse, "firstName" | "lastName" | "email">;
+  size: "xsm" | "sm" | "md";
 }
 
 export function EmployeeAvatar({ size, employee }: EmployeeAvatarProps) {

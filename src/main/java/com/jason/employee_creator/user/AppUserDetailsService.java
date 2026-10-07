@@ -1,6 +1,5 @@
 package com.jason.employee_creator.user;
 
-import java.util.Locale;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,8 +16,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) {
-    String normalisedEmail =
-      email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    String normalisedEmail = Emails.normalise(email);
 
     User user = userRepository
       .findByEmail(normalisedEmail)

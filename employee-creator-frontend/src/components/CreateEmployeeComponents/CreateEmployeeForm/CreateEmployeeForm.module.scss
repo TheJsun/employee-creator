@@ -24,3 +24,98 @@
   color: #d33636;
   margin: 0;
 }
+
+.successTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.successBody {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #555555;
+}
+
+.credentials {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  margin: 0;
+  padding: 1rem;
+  background-color: #f7f7f7;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+.credentialLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #777777;
+}
+
+.credentialValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 0.95rem;
+  word-break: break-all;
+}
+
+.password {
+  padding: 0.3rem 0.5rem;
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+}
+
+.copyButton,
+.doneButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.copyButton {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.doneButton {
+  align-self: flex-start;
+  color: #ffffff;
+  background-color: #2f6fed;
+  border: 1px solid #2f6fed;
+
+  &:hover {
+    background-color: #2559c4;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "employee": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "middleName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "jobRole": {
+          "type": "string"
+        },
+        "contractType": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "finishDate": {},
+        "onGoing": {
+          "type": "boolean"
+        },
+        "employmentType": {
+          "type": "string"
+        },
+        "hoursPerWeek": {
+          "type": "number"
+        },
+        "department": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "middleName",
+        "email",
+        "phoneNumber",
+        "address",
+        "jobRole",
+        "contractType",
+        "startDate",
+        "finishDate",
+        "onGoing",
+        "employmentType",
+        "hoursPerWeek"
+      ]
+    },
+    "temporaryPassword": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "employee",
+    "temporaryPassword"
+  ]
+}

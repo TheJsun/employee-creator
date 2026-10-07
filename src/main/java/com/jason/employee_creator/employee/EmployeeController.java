@@ -1,6 +1,8 @@
 package com.jason.employee_creator.employee;
 
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
+import com.jason.employee_creator.employee.dtos.CreateEmployeeResponse;
+import com.jason.employee_creator.employee.dtos.CreateEmployeeResult;
 import com.jason.employee_creator.employee.dtos.EmployeeResponse;
 import com.jason.employee_creator.employee.dtos.UpdateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
@@ -42,12 +44,12 @@ public class EmployeeController {
   }
 
   @PostMapping()
-  public ResponseEntity<EmployeeResponse> createEmployee(
+  public ResponseEntity<CreateEmployeeResponse> createEmployee(
     @RequestBody @Valid CreateEmployeeRequest data
   ) {
-    Employee createdEmployee = this.employeeService.create(data);
-    return new ResponseEntity<EmployeeResponse>(
-      EmployeeResponse.of(createdEmployee),
+    CreateEmployeeResult created = this.employeeService.create(data);
+    return new ResponseEntity<CreateEmployeeResponse>(
+      CreateEmployeeResponse.of(created),
       HttpStatus.CREATED
     );
   }

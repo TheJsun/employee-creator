@@ -15,11 +15,11 @@ export function useEmployees() {
   });
 }
 
-export function useEmployee(id: number) {
+export function useEmployee(id: number | undefined) {
   return useQuery({
     queryKey: ["employees", id],
-    queryFn: () => getEmployeeById(id),
-    enabled: !!id,
+    queryFn: () => getEmployeeById(id!),
+    enabled: id != null,
   });
 }
 

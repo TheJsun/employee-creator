@@ -4,6 +4,7 @@ import {
   CreateEmployeeRequest,
   type CreateEmployeeInput,
   type CreateEmployeeOutput,
+  type CreateEmployeeResponse,
   type EmployeeResponse,
 } from "../../../schemas/employee-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +34,8 @@ export default function CreateEmployeeForm({
   departments,
 }: CreateEmployeeProps) {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [created, setCreated] = useState<CreateEmployeeResponse | null>(null);
+  const [copied, setCopied] = useState(false);
   const methods = useForm<CreateEmployeeInput, unknown, CreateEmployeeOutput>({
     resolver: zodResolver(CreateEmployeeRequest),
     defaultValues: initialData ? toFormData(initialData) : undefined,
@@ -64,11 +67,71 @@ export default function CreateEmployeeForm({
         { onSuccess: () => navigate(-1) },
       );
     } else {
+      // Hold the result instead of navigating away: the temporary password is
+      // returned once and cannot be fetched again, so the admin has to see it.
       createEmployeeMutation.mutate(data, {
-        onSuccess: () => navigate("/"),
+        onSuccess: (result) => setCreated(result),
       });
     }
   };
+
+  const handleCopy = async () => {
+    if (!created) return;
+    try {
+      await navigator.clipboard.writeText(created.temporaryPassword);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  if (created) {
+    return (
+      <div className={classes.formContainer}>
+        <div className={classes.formCard}>
+          <h2 className={classes.successTitle}>Employee created</h2>
+          <p className={classes.successBody}>
+            {created.employee.firstName} {created.employee.lastName} can now
+            sign in with the credentials below. The temporary password is shown
+            only once. Copy it now and pass it on.
+          </p>
+
+          <dl className={classes.credentials}>
+            <dt className={classes.credentialLabel}>Email</dt>
+            <dd className={classes.credentialValue}>
+              {created.employee.email}
+            </dd>
+
+            <dt className={classes.credentialLabel}>Temporary password</dt>
+            <dd className={classes.credentialValue}>
+              <code className={classes.password}>
+                {created.temporaryPassword}
+              </code>
+              <button
+                type="button"
+                className={classes.copyButton}
+                onClick={handleCopy}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </dd>
+          </dl>
+
+          <p aria-live="polite" className={classes.visuallyHidden}>
+            {copied ? "Temporary password copied to clipboard" : ""}
+          </p>
+
+          <button
+            type="button"
+            className={classes.doneButton}
+            onClick={() => navigate("/")}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <FormProvider {...methods}>

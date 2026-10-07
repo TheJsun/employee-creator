@@ -35,7 +35,12 @@ const SORT_OPTIONS = [
 ];
 
 const HomePage = () => {
-  const { data: employees = [], isLoading, isError, error } = useEmployees();
+  const {
+    data: employees = [],
+    isLoading: employeesIsLoading,
+    isError: employeesIsError,
+    error: employeesError,
+  } = useEmployees();
   const {
     data: departments = [],
     isLoading: isDepartmentsLoading,
@@ -90,7 +95,7 @@ const HomePage = () => {
   const sortedEmployees = [...filteredEmployees].sort((a, b) => {
     switch (sortBy) {
       case "dateAdded":
-        return b.id - a.id;
+        return a.id - b.id;
 
       case "name":
         return `${a.firstName} ${a.lastName}`.localeCompare(
@@ -130,7 +135,7 @@ const HomePage = () => {
           </Button>
         }
         numEmployees={employees.length}
-        isLoading={isLoading}
+        isLoading={employeesIsLoading}
       />
       <section className={classes.content}>
         <div className={classes.contentInner}>
@@ -193,9 +198,9 @@ const HomePage = () => {
             employees={paginatedEmployees}
             onDelete={handleDelete}
             onEdit={handleEdit}
-            isLoading={isLoading}
-            isError={isError}
-            error={error}
+            isLoading={employeesIsLoading}
+            isError={employeesIsError}
+            error={employeesError}
             listBodyRef={listBodyRef}
           />
         </div>
