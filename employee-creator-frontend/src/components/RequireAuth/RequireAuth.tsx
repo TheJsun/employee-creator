@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import Navbar from "../Navbar/Navbar";
+import classes from "./RequireAuth.module.scss";
 
 export function RequireAuth() {
   const { user, loading } = useAuth();
@@ -8,5 +10,10 @@ export function RequireAuth() {
 
   if (!user) return <Navigate to="/login" replace />;
 
-  return <Outlet />;
+  return (
+    <div className={classes.container}>
+      <Navbar />
+      <Outlet />
+    </div>
+  );
 }
