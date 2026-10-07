@@ -25,6 +25,16 @@ export interface EmployeeResponse {
   hoursPerWeek: number;
 }
 
+/**
+ * Creating an employee also provisions their login account. The temporary
+ * password is returned once and cannot be fetched again, so it is only on this
+ * response and not on EmployeeResponse.
+ */
+export interface CreateEmployeeResponse {
+  employee: EmployeeResponse;
+  temporaryPassword: string;
+}
+
 export const CreateEmployeeRequest = z
   .object({
     firstName: z.string().trim().min(1, "First name is required").max(50),

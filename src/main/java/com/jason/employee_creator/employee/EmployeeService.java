@@ -6,11 +6,16 @@ import com.jason.employee_creator.common.exceptions.UnprocessableContentExceptio
 import com.jason.employee_creator.department.DepartmentRepository;
 import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
+import com.jason.employee_creator.employee.dtos.CreateEmployeeResult;
 import com.jason.employee_creator.employee.dtos.UpdateEmployeeRequest;
 import com.jason.employee_creator.employee.entities.Employee;
 import com.jason.employee_creator.user.CurrentUser;
+import com.jason.employee_creator.user.Emails;
+import com.jason.employee_creator.user.Role;
 import com.jason.employee_creator.user.User;
 import com.jason.employee_creator.user.UserRepository;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,17 +35,21 @@ public class EmployeeService {
   private final ModelMapper mapper;
   private final DepartmentRepository departmentRepository;
   private final UserRepository userRepository;
+  private static final SecureRandom RANDOM = new SecureRandom();
+  private final PasswordEncoder passwordEncoder;
 
   public EmployeeService(
     EmployeeRepository repo,
     ModelMapper mapper,
     DepartmentRepository departmentRepository,
-    UserRepository userRepository
+    UserRepository userRepository,
+    PasswordEncoder passwordEncoder
   ) {
     this.repo = repo;
     this.mapper = mapper;
     this.departmentRepository = departmentRepository;
     this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public List<Employee> findAll() {
@@ -66,11 +76,21 @@ public class EmployeeService {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  public Employee create(CreateEmployeeRequest data) {
+  @Transactional
+  public CreateEmployeeResult create(CreateEmployeeRequest data) {
     log.info("Attempting to create employee with email={}", data.getEmail());
 
     if (this.repo.existsByEmail(data.getEmail())) {
       log.warn("Create employee failed - duplicate email={}", data.getEmail());
+
+      throw new DuplicateFieldException("email", data.getEmail());
+    }
+
+    // users.email is unique, so check it up front - otherwise the insert below
+    // fails with a constraint violation and surfaces as a 500 instead of a 409.
+    String loginEmail = Emails.normalise(data.getEmail());
+    if (this.userRepository.existsByEmail(loginEmail)) {
+      log.warn("Create employee failed - duplicate login email={}", loginEmail);
 
       throw new DuplicateFieldException("email", data.getEmail());
     }
@@ -85,7 +105,25 @@ public class EmployeeService {
       createdEmployee.getEmail()
     );
 
-    return createdEmployee;
+    // The plaintext is returned to the caller to show the admin once and is never
+    // stored or logged - only the hash goes to the database.
+    String temporaryPassword = generateTemporaryPassword();
+    User createdUser = new User(
+      loginEmail,
+      passwordEncoder.encode(temporaryPassword),
+      Role.EMPLOYEE,
+      createdEmployee
+    );
+
+    userRepository.saveAndFlush(createdUser);
+    log.info(
+      "Created login account id={} email={} for employee id={}",
+      createdUser.getId(),
+      createdUser.getEmail(),
+      createdEmployee.getId()
+    );
+
+    return new CreateEmployeeResult(createdEmployee, temporaryPassword);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
@@ -94,12 +132,8 @@ public class EmployeeService {
     log.info("Attempting to delete employee id={}", id);
 
     Employee target = this.findById(id);
-
-    // An admin deleting their own employee record would also cascade away
-    // their own login account, locking them out mid-session.
-    Authentication authentication = SecurityContextHolder
-      .getContext()
-      .getAuthentication();
+    Authentication authentication =
+      SecurityContextHolder.getContext().getAuthentication();
     if (
       authentication != null &&
       authentication.getPrincipal() instanceof CurrentUser currentUser &&
@@ -110,8 +144,6 @@ public class EmployeeService {
       );
     }
 
-    // users.employee_id is a foreign key, so a linked login account has to go
-    // first or the delete fails with a constraint violation.
     Optional<User> linkedUser = this.userRepository.findByEmployeeId(id);
     if (linkedUser.isPresent()) {
       User user = linkedUser.get();
@@ -143,5 +175,11 @@ public class EmployeeService {
     }
     log.info("Updated employee with id={} with new data", existing.getId());
     return repo.saveAndFlush(existing);
+  }
+
+  private String generateTemporaryPassword() {
+    byte[] bytes = new byte[12];
+    RANDOM.nextBytes(bytes);
+    return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
   }
 }

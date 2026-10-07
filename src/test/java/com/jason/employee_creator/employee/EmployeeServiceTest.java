@@ -1,6 +1,8 @@
 package com.jason.employee_creator.employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -14,6 +16,7 @@ import com.jason.employee_creator.common.exceptions.NotFoundException;
 import com.jason.employee_creator.department.DepartmentRepository;
 import com.jason.employee_creator.department.entities.Department;
 import com.jason.employee_creator.employee.dtos.CreateEmployeeRequest;
+import com.jason.employee_creator.employee.dtos.CreateEmployeeResult;
 import com.jason.employee_creator.employee.entities.Employee;
 import com.jason.employee_creator.user.Role;
 import com.jason.employee_creator.user.User;
@@ -22,11 +25,13 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -42,6 +47,9 @@ public class EmployeeServiceTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private PasswordEncoder passwordEncoder;
 
   @InjectMocks
   private EmployeeService employeeService;
@@ -110,15 +118,82 @@ public class EmployeeServiceTest {
     department.setId(1L);
 
     when(this.repo.existsByEmail("testEmail@gmail.com")).thenReturn(false);
+    when(this.userRepository.existsByEmail("testemail@gmail.com")).thenReturn(
+      false
+    );
     when(this.mapper.map(data, Employee.class)).thenReturn(employee);
     when(this.departmentRepository.findById(1L)).thenReturn(
       Optional.of(department)
     );
-    Employee result = this.employeeService.create(data);
+    when(this.passwordEncoder.encode(any(CharSequence.class))).thenReturn(
+      "hashed"
+    );
 
-    assertEquals(employee, result);
-    assertEquals(department, result.getDepartment());
+    CreateEmployeeResult result = this.employeeService.create(data);
+
+    assertEquals(employee, result.employee());
+    assertEquals(department, result.employee().getDepartment());
     verify(this.repo).saveAndFlush(employee);
+  }
+
+  @Test
+  public void createEmployee_returnsPlaintextPasswordAndStoresOnlyTheHash() {
+    CreateEmployeeRequest data = new CreateEmployeeRequest();
+    data.setEmail("testEmail@gmail.com");
+    data.setDepartmentId(1L);
+
+    Employee employee = new Employee();
+    Department department = new Department();
+    department.setId(1L);
+
+    when(this.repo.existsByEmail("testEmail@gmail.com")).thenReturn(false);
+    when(this.userRepository.existsByEmail("testemail@gmail.com")).thenReturn(
+      false
+    );
+    when(this.mapper.map(data, Employee.class)).thenReturn(employee);
+    when(this.departmentRepository.findById(1L)).thenReturn(
+      Optional.of(department)
+    );
+    when(this.passwordEncoder.encode(any(CharSequence.class))).thenReturn(
+      "hashed-temporary-password"
+    );
+
+    CreateEmployeeResult result = this.employeeService.create(data);
+
+    // The caller needs the plaintext to hand to the new employee; the row must
+    // hold only the hash. Returning the hash here was what broke first login.
+    assertNotNull(
+      result.temporaryPassword(),
+      "create should return the plaintext temporary password"
+    );
+    assertNotEquals(
+      "hashed-temporary-password",
+      result.temporaryPassword(),
+      "the returned password must be the plaintext, not the stored hash"
+    );
+    verify(this.passwordEncoder).encode(result.temporaryPassword());
+
+    ArgumentCaptor<User> savedUser = ArgumentCaptor.forClass(User.class);
+    verify(this.userRepository).saveAndFlush(savedUser.capture());
+    assertEquals("hashed-temporary-password", savedUser.getValue().getPassword());
+    assertEquals("testemail@gmail.com", savedUser.getValue().getEmail());
+    assertEquals(Role.EMPLOYEE, savedUser.getValue().getRole());
+  }
+
+  @Test
+  public void createEmployee_loginEmailAlreadyTaken_throwsDuplicateFieldException() {
+    CreateEmployeeRequest data = new CreateEmployeeRequest();
+    data.setEmail("testEmail@gmail.com");
+
+    when(this.repo.existsByEmail("testEmail@gmail.com")).thenReturn(false);
+    when(this.userRepository.existsByEmail("testemail@gmail.com")).thenReturn(
+      true
+    );
+
+    assertThrows(DuplicateFieldException.class, () ->
+      this.employeeService.create(data)
+    );
+    verify(this.repo, never()).saveAndFlush(any(Employee.class));
   }
 
   @Test

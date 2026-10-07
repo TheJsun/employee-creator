@@ -1,5 +1,6 @@
 import type {
   CreateEmployeeRequest,
+  CreateEmployeeResponse,
   EmployeeResponse,
 } from "../schemas/employee-schema";
 
@@ -45,7 +46,7 @@ export const createEmployee = async (data: CreateEmployeeRequest) => {
       errorBody?.message ?? `Failed to create employee: ${response.status}`,
     );
   }
-  return (await response.json()) as EmployeeResponse;
+  return (await response.json()) as CreateEmployeeResponse;
 };
 
 export const deleteEmployee = async (id: number) => {

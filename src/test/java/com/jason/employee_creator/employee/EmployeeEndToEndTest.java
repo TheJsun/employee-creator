@@ -3,6 +3,7 @@ package com.jason.employee_creator.employee;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.jason.employee_creator.department.entities.Department;
@@ -15,6 +16,7 @@ import com.jason.employee_creator.user.Role;
 import com.jason.employee_creator.user.User;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -139,21 +141,93 @@ public class EmployeeEndToEndTest extends ApiIntegrationTest {
       .log()
       .body()
       .statusCode(HttpStatus.CREATED.value())
-      .body("firstName", equalTo("validFirstName"))
-      .body("lastName", equalTo("validLastName"))
-      .body("middleName", equalTo("validMiddleName"))
-      .body("email", equalTo("validEmail@gmail.com"))
-      .body("phoneNumber", equalTo("0412345678"))
-      .body("address", equalTo("123 Example Street, Melbourne VIC 3000"))
-      .body("jobRole", equalTo("Software Engineer"))
-      .body("department.name", equalTo("Engineering"))
-      .body("contractType", equalTo("CONTRACT"))
-      .body("startDate", equalTo("2023-06-01"))
-      .body("finishDate", equalTo("2024-06-01"))
-      .body("onGoing", equalTo(false))
-      .body("employmentType", equalTo("PART_TIME"))
-      .body("hoursPerWeek", equalTo(30))
-      .body(matchesJsonSchemaInClasspath("schemas/employee-schema.json"));
+      .body("employee.firstName", equalTo("validFirstName"))
+      .body("employee.lastName", equalTo("validLastName"))
+      .body("employee.middleName", equalTo("validMiddleName"))
+      .body("employee.email", equalTo("validEmail@gmail.com"))
+      .body("employee.phoneNumber", equalTo("0412345678"))
+      .body("employee.address", equalTo("123 Example Street, Melbourne VIC 3000"))
+      .body("employee.jobRole", equalTo("Software Engineer"))
+      .body("employee.department.name", equalTo("Engineering"))
+      .body("employee.contractType", equalTo("CONTRACT"))
+      .body("employee.startDate", equalTo("2023-06-01"))
+      .body("employee.finishDate", equalTo("2024-06-01"))
+      .body("employee.onGoing", equalTo(false))
+      .body("employee.employmentType", equalTo("PART_TIME"))
+      .body("employee.hoursPerWeek", equalTo(30))
+      .body("temporaryPassword", not(emptyOrNullString()))
+      .body(matchesJsonSchemaInClasspath("schemas/create-employee-schema.json"));
+  }
+
+  @Test
+  public void createEmployee_temporaryPasswordLogsIn() {
+    String session = adminSession();
+    Department department = createDepartment("Engineering");
+
+    // The whole point of the generated password: the admin can read it off the
+    // create response and the new employee can sign in with it.
+    String temporaryPassword = given()
+      .cookie(SESSION_COOKIE, session)
+      .contentType(ContentType.JSON)
+      .body(validRequest(department.getId()))
+      .when()
+      .post("/api/employees")
+      .then()
+      .statusCode(HttpStatus.CREATED.value())
+      .extract()
+      .path("temporaryPassword");
+
+    assertNotNull(temporaryPassword, "create should return a temporary password");
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(
+        Map.of("email", "validEmail@gmail.com", "password", temporaryPassword)
+      )
+      .when()
+      .post("/api/auth/login")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.OK.value())
+      // the login identity is stored lowercased, so it comes back lowercased
+      .body("email", equalTo("validemail@gmail.com"))
+      .body("role", equalTo("EMPLOYEE"));
+  }
+
+  @Test
+  public void createEmployee_mixedCaseEmail_canLogInWithLowercase() {
+    String session = adminSession();
+    Department department = createDepartment("Engineering");
+
+    CreateEmployeeRequest request = validRequest(department.getId());
+    request.setEmail("Jane.Doe@Example.com");
+
+    String temporaryPassword = given()
+      .cookie(SESSION_COOKIE, session)
+      .contentType(ContentType.JSON)
+      .body(request)
+      .when()
+      .post("/api/employees")
+      .then()
+      .statusCode(HttpStatus.CREATED.value())
+      .extract()
+      .path("temporaryPassword");
+
+    // The login identity is stored lowercased, so lookup finds it regardless of
+    // how the admin typed the address.
+    given()
+      .contentType(ContentType.JSON)
+      .body(
+        Map.of("email", "jane.doe@example.com", "password", temporaryPassword)
+      )
+      .when()
+      .post("/api/auth/login")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.OK.value())
+      .body("email", equalTo("jane.doe@example.com"));
   }
 
   @Test
